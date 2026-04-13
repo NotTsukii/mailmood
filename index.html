@@ -1,0 +1,1593 @@
+
+
+Voici le fichier **complet** — c'est long mais TOUT est là, copie-colle d'un seul bloc :
+
+```html
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MailMood — Ton email enfin silencieux</title>
+    <meta name="description" content="MailMood trie ta boîte mail par urgence grâce à l'IA. Directement dans Gmail. Sans jamais lire tes emails.">
+    <meta property="og:title" content="MailMood — Ton email enfin silencieux">
+    <meta property="og:description" content="L'extension qui trie ta boîte mail par urgence. Sans jamais lire tes emails.">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📧</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           RESET & VARIABLES
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0A0A0B;
+            --bg-secondary: #111113;
+            --bg-tertiary: #18181B;
+            --bg-card: #1A1A1F;
+            --bg-card-hover: #222228;
+            --border: #27272A;
+            --border-light: #3F3F46;
+            --text-primary: #FAFAFA;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --accent: #8B5CF6;
+            --accent-hover: #7C3AED;
+            --accent-glow: rgba(139, 92, 246, 0.15);
+            --cyan: #06B6D4;
+            --green: #22C55E;
+            --yellow: #EAB308;
+            --red: #EF4444;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* ============================================
+           UTILITIES
+           ============================================ */
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ============================================
+           NAVBAR
+           ============================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: var(--transition);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(10, 10, 11, 0.8);
+            border-bottom: 1px solid transparent;
+        }
+
+        .navbar.scrolled {
+            border-bottom-color: var(--border);
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), var(--cyan));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .lang-toggle {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .lang-toggle:hover {
+            border-color: var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-light);
+            background: var(--bg-card);
+        }
+
+        .nav-cta-mobile {
+            display: none;
+        }
+
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .hamburger span {
+            width: 22px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* ============================================
+           HERO
+           ============================================ */
+        .hero {
+            padding: 160px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 600px;
+            background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge .pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 7vw, 72px);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(17px, 2.5vw, 20px);
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+
+        .hero-buttons .btn-primary {
+            padding: 14px 28px;
+            font-size: 16px;
+        }
+
+        .hero-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Waitlist Counter */
+        .waitlist-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 32px;
+            padding: 12px 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .waitlist-avatars {
+            display: flex;
+        }
+
+        .waitlist-avatars span {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--bg-secondary);
+            margin-left: -8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .waitlist-avatars span:first-child {
+            margin-left: 0;
+        }
+
+        .waitlist-avatars .av1 { background: #7C3AED; }
+        .waitlist-avatars .av2 { background: #2563EB; }
+        .waitlist-avatars .av3 { background: #0891B2; }
+        .waitlist-avatars .av4 { background: #059669; }
+
+        .waitlist-count {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           DEMO
+           ============================================ */
+        .demo {
+            padding: 60px 0 100px;
+        }
+
+        .demo-window {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+        }
+
+        .demo-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .demo-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .demo-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .demo-dots .dot-red { background: #EF4444; }
+        .demo-dots .dot-yellow { background: #EAB308; }
+        .demo-dots .dot-green { background: #22C55E; }
+
+        .demo-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .demo-filters {
+            display: flex;
+            gap: 8px;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .demo-filter {
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .demo-filter:hover,
+        .demo-filter.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .demo-emails {
+            padding: 8px;
+        }
+
+        .demo-email {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            transition: var(--transition);
+            cursor: default;
+            animation: fadeIn 0.4s ease-out both;
+        }
+
+        .demo-email:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .demo-email:nth-child(1) { animation-delay: 0.1s; }
+        .demo-email:nth-child(2) { animation-delay: 0.2s; }
+        .demo-email:nth-child(3) { animation-delay: 0.3s; }
+        .demo-email:nth-child(4) { animation-delay: 0.4s; }
+        .demo-email:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .email-score {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .score-red { background: rgba(239, 68, 68, 0.15); }
+        .score-yellow { background: rgba(234, 179, 8, 0.15); }
+        .score-green { background: rgba(34, 197, 94, 0.15); }
+
+        .email-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .email-from {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .email-subject {
+            font-size: 13px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .email-time {
+            font-size: 12px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .email-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .tag-urgent { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+        .tag-normal { background: rgba(234, 179, 8, 0.15); color: var(--yellow); }
+        .tag-low { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+
+        /* ============================================
+           PROBLEM SECTION
+           ============================================ */
+        .problem {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .problem-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .problem-header .section-subtitle {
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-light);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .stat-number {
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+        }
+
+        .stat-number.red { color: var(--red); }
+        .stat-number.yellow { color: var(--yellow); }
+        .stat-number.accent { color: var(--accent); }
+
+        .stat-label {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           HOW IT WORKS
+           ============================================ */
+        .how-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .how-header .section-subtitle {
+            margin: 0 auto;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 40px 24px;
+        }
+
+        .step-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 24px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .step-number {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .step h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           PRIVACY SECTION
+           ============================================ */
+        .privacy {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .privacy-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .privacy-content .section-title {
+            margin-bottom: 24px;
+        }
+
+        .privacy-content .section-subtitle {
+            margin-bottom: 32px;
+        }
+
+        .privacy-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .privacy-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .privacy-list .check {
+            color: var(--green);
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .privacy-visual {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 40px;
+        }
+
+        .privacy-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .diagram-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .diagram-box {
+            padding: 14px 20px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            flex: 1;
+            text-align: center;
+        }
+
+        .diagram-box.highlight {
+            border-color: var(--accent);
+            background: rgba(139, 92, 246, 0.08);
+        }
+
+        .diagram-arrow {
+            color: var(--text-muted);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .diagram-label {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 100px;
+        }
+
+        /* ============================================
+           PRICING
+           ============================================ */
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .pricing-header .section-subtitle {
+            margin: 0 auto;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--accent);
+            box-shadow: 0 0 40px var(--accent-glow);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            right: 24px;
+            background: var(--accent);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 100px;
+        }
+
+        .pricing-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .pricing-price {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .pricing-amount {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .pricing-period {
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        .pricing-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .pricing-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .pricing-features .icon {
+            color: var(--green);
+            flex-shrink: 0;
+        }
+
+        .pricing-card .btn {
+            width: 100%;
+            padding: 12px;
+        }
+
+        /* ============================================
+           FAQ
+           ============================================ */
+        .faq {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .faq-list {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .faq-item:hover {
+            border-color: var(--border-light);
+        }
+
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+        }
+
+        .faq-question .icon {
+            font-size: 20px;
+            color: var(--text-muted);
+            transition: var(--transition);
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
+
+        .faq-item.open .faq-question .icon {
+            transform: rotate(45deg);
+            color: var(--accent);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .faq-answer-inner {
+            padding: 0 24px 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* ============================================
+           CTA SECTION
+           ============================================ */
+        .cta-section {
+            text-align: center;
+        }
+
+        .cta-box {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 64px 40px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 300px;
+            background: radial-gradient(ellipse, var(--accent-glow), transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-box .section-title {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-box .section-subtitle {
+            margin: 0 auto 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-form {
+            display: flex;
+            gap: 10px;
+            max-width: 440px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-form input {
+            flex: 1;
+            padding: 14px 18px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .cta-form input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .cta-form input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .cta-form .btn {
+            padding: 14px 24px;
+        }
+
+        .form-success {
+            display: none;
+            padding: 16px 24px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: var(--radius-sm);
+            color: var(--green);
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 16px;
+            max-width: 440px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-success.show {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-left {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            font-size: 13px;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--text-secondary);
+        }
+
+        /* ============================================
+           SCROLL REVEAL
+           ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .section {
+                padding: 72px 0;
+            }
+
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 64px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--bg-primary);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 32px;
+                z-index: 999;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                font-size: 18px;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-cta-desktop {
+                display: none;
+            }
+
+            .nav-cta-mobile {
+                display: inline-flex;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .privacy-inner {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .pricing-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-form {
+                flex-direction: column;
+            }
+
+            .hero h1 {
+                font-size: clamp(36px, 10vw, 54px);
+            }
+
+            .cta-box {
+                padding: 48px 24px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== NAVBAR ======== -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">📧</div>
+                MailMood
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#demo" data-i18n="nav.demo">Démo</a></li>
+                <li><a href="#how" data-i18n="nav.how">Comment ça marche</a></li>
+                <li><a href="#pricing" data-i18n="nav.pricing">Prix</a></li>
+                <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
+                <li class="nav-cta-mobile"><a href="#cta" class="btn btn-primary" data-i18n="nav.cta">Rejoindre la bêta</a></li>
+            </ul>
+            <div class="nav-right">
+                <button class="lang-toggle" id="langToggle">EN</button>
+                <a href="#cta" class="btn btn-primary nav-cta-desktop" data-i18n="nav.cta">Rejoindre la bêta</a>
+                <button class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======== HERO ======== -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <span class="pulse"></span>
+                <span data-i18n="hero.badge">Bêta privée — Places limitées</span>
+            </div>
+            <h1>
+                <span data-i18n="hero.title1">Ton email,</span><br>
+                <span class="gradient-text" data-i18n="hero.title2">enfin silencieux.</span>
+            </h1>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">
+                MailMood trie ta boîte mail par urgence grâce à l'IA. Directement dans Gmail. Sans jamais lire tes emails.
+            </p>
+            <div class="hero-buttons">
+                <a href="#cta" class="btn btn-primary" data-i18n="hero.cta">Rejoindre la bêta gratuite</a>
+                <a href="#demo" class="btn btn-secondary" data-i18n="hero.demo">Voir la démo ↓</a>
+            </div>
+            <p class="hero-note" data-i18n="hero.note">Gratuit · Extension Chrome · Aucun accès à tes emails</p>
+            <div class="waitlist-counter">
+                <div class="waitlist-avatars">
+                    <span class="av1">A</span>
+                    <span class="av2">M</span>
+                    <span class="av3">S</span>
+                    <span class="av4">K</span>
+                </div>
+                <span>
+                    <span data-i18n="waitlist.before">Déjà</span>
+                    <span class="waitlist-count" id="waitlistCount">847</span>
+                    <span data-i18n="waitlist.after">inscrits sur la liste d'attente</span>
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== DEMO ======== -->
+    <section class="demo" id="demo">
+        <div class="container">
+            <div class="demo-window reveal">
+                <div class="demo-toolbar">
+                    <div class="demo-dots">
+                        <span class="dot-red"></span>
+                        <span class="dot-yellow"></span>
+                        <span class="dot-green"></span>
+                    </div>
+                    <div class="demo-title" data-i18n="demo.title">📬 Boîte de réception</div>
+                    <div style="width:52px"></div>
+                </div>
+                <div class="demo-filters">
+                    <button class="demo-filter active" data-filter="all" data-i18n="demo.all">Tous</button>
+                    <button class="demo-filter" data-filter="urgent" data-i18n="demo.urgent">🔴 Urgent</button>
+                    <button class="demo-filter" data-filter="normal" data-i18n="demo.normal">🟡 Normal</button>
+                    <button class="demo-filter" data-filter="low" data-i18n="demo.low">🟢 Peut attendre</button>
+                </div>
+                <div class="demo-emails" id="demoEmails">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== PROBLEM ======== -->
+    <section class="problem section" id="problem">
+        <div class="container">
+            <div class="problem-header reveal">
+                <div class="section-label" data-i18n="problem.label">Le constat</div>
+                <h2 class="section-title">
+                    <span data-i18n="problem.title">Le problème,</span><br>
+                    <span class="gradient-text" data-i18n="problem.title2">en chiffres</span>
+                </h2>
+                <p class="section-subtitle" data-i18n="problem.subtitle">Ta boîte mail te vole plus de temps que tu ne le penses.</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card reveal">
+                    <div class="stat-number red" data-i18n="problem.stat1.num">45 min</div>
+                    <div class="stat-label" data-i18n="problem.stat1.label">perdues chaque matin à trier tes emails</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-number yellow" data-i18n="problem.stat2.num">80%</div>
+                    <div class="stat-label" data-i18n="problem.stat2.label">de tes emails ne méritent pas ton attention immédiate</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-number accent" data-i18n="problem.stat3.num">11 jours</div>
+                    <div class="stat-label" data-i18n="problem.stat3.label">par an gaspillés à gérer une boîte mail désorganisée</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== HOW IT WORKS ======== -->
+    <section class="section" id="how">
+        <div class="container">
+            <div class="how-header reveal">
+                <div class="section-label" data-i18n="how.label">Simple</div>
+                <h2 class="section-title">
+                    <span data-i18n="how.title">Comment ça</span><br>
+                    <span class="gradient-text" data-i18n="how.title2">marche ?</span>
+                </h2>
+                <p class="section-subtitle" data-i18n="how.subtitle">3 étapes. Moins de 2 minutes. Zéro configuration.</p>
+            </div>
+            <div class="steps">
+                <div class="step reveal">
+                    <div class="step-icon">⬇️</div>
+                    <div class="step-number" data-i18n="how.step1.num">Étape 1</div>
+                    <h3 data-i18n="how.step1.title">Installe l'extension</h3>
+                    <p data-i18n="how.step1.desc">Un clic depuis le Chrome Web Store. Pas de compte à créer, pas de configuration complexe.</p>
+                </div>
+                <div class="step reveal">
+                    <div class="step-icon">🧠</div>
+                    <div class="step-number" data-i18n="how.step2.num">Étape 2</div>
+                    <h3 data-i18n="how.step2.title">L'IA analyse tes emails</h3>
+                    <p data-i18n="how.step2.desc">MailMood lit uniquement l'expéditeur et l'objet pour scorer chaque email par urgence. Jamais le contenu.</p>
+                </div>
+                <div class="step reveal">
+                    <div class="step-icon">✨</div>
+                    <div class="step-number" data-i18n="how.step3.num">Étape 3</div>
+                    <h3 data-i18n="how.step3.title">Tu vois ce qui compte</h3>
+                    <p data-i18n="how.step3.desc">🔴 Urgent · 🟡 Normal · 🟢 Peut attendre — directement dans Gmail. Tu gagnes 30 minutes chaque matin.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== PRIVACY ======== -->
+    <section class="privacy section" id="privacy">
+        <div class="container">
+            <div class="privacy-inner">
+                <div class="privacy-content reveal">
+                    <div class="section-label" data-i18n="privacy.label">Vie privée</div>
+                    <h2 class="section-title" data-i18n="privacy.title">Tes emails restent<br><span class="gradient-text" data-i18n="privacy.title2">tes emails.</span></h2>
+                    <p class="section-subtitle" data-i18n="privacy.subtitle">On ne lit jamais le contenu de tes messages. Voici exactement ce que MailMood voit.</p>
+                    <ul class="privacy-list">
+                        <li><span class="check">✓</span> <span data-i18n="privacy.item1">Seuls l'expéditeur et l'objet sont analysés</span></li>
+                        <li><span class="check">✓</span> <span data-i18n="privacy.item2">Aucun contenu d'email n'est lu ni stocké</span></li>
+                        <li><span class="check">✓</span> <span data-i18n="privacy.item3">Données traitées en temps réel, jamais conservées</span></li>
+                        <li><span class="check">✓</span> <span data-i18n="privacy.item4">Conforme RGPD — suppression en 1 clic</span></li>
+                        <li><span class="check">✓</span> <span data-i18n="privacy.item5">Code de l'extension auditable</span></li>
+                    </ul>
+                </div>
+                <div class="privacy-visual reveal">
+                    <div class="privacy-diagram">
+                        <div class="diagram-row">
+                            <div class="diagram-box">📧 Gmail</div>
+                            <div class="diagram-arrow">→</div>
+                            <div class="diagram-box highlight">🔒 Extension</div>
+                        </div>
+                        <div class="diagram-label" data-i18n="privacy.diagram1">✓ Lit uniquement : expéditeur + objet</div>
+                        <div class="diagram-row">
+                            <div class="diagram-box highlight">🔒 Extension</div>
+                            <div class="diagram-arrow">→</div>
+                            <div class="diagram-box">🧠 IA Scoring</div>
+                        </div>
+                        <div class="diagram-label" data-i18n="privacy.diagram2">✓ Envoie : "Jean Dupont" + "Facture urgente"</div>
+                        <div class="diagram-row">
+                            <div class="diagram-box">🧠 IA Scoring</div>
+                            <div class="diagram-arrow">→</div>
+                            <div class="diagram-box highlight">🔴🟡🟢</div>
+                        </div>
+                        <div class="diagram-label" data-i18n="privacy.diagram3">✓ Retourne uniquement le score d'urgence</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== PRICING ======== -->
+    <section class="section" id="pricing">
+        <div class="container">
+            <div class="pricing-header reveal">
+                <div class="section-label" data-i18n="pricing.label">Prix</div>
+                <h2 class="section-title">
+                    <span data-i18n="pricing.title">Simple et</span><br>
+                    <span class="gradient-text" data-i18n="pricing.title2">transparent.</span>
+                </h2>
+                <p class="section-subtitle" data-i18n="pricing.subtitle">Commence gratuitement. Passe à Pro quand tu veux.</p>
+            </div>
+            <div class="pricing-cards">
+                <div class="pricing-card reveal">
+                    <div class="pricing-name" data-i18n="pricing.free.name">Free</div>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">0€</span>
+                    </div>
+                    <p class="pricing-desc" data-i18n="pricing.free.desc">Parfait pour tester MailMood et voir la différence.</p>
+                    <ul class="pricing-features">
+                        <li><span class="icon">✓</span> <span data-i18n="pricing.free.f1">20 emails scorés / jour</span></li>
+                        <li><span class="icon">✓</span> <span data-i18n="pricing.free.f2">Tri par urgence 🔴🟡🟢</span></li>
+                        <li><span class="icon">✓</span> <span data-i18n="pricing.free.f3">Fonctionne dans Gmail</span></li>
+                    </ul>
+                    <a href="#cta" class="btn btn-secondary" data-i18n="pricing.free.btn">Commencer gratuitement</a>
+                </div>
+                <div class="pricing-card featured reveal">
+                    <div class="pricing-badge" data-i18n="pricing.pro.badge">Populaire</div>
+                    <div class="pricing-name" data-i18n="pricing.pro.name">Pro</div>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">3,99€</span>
+                        <span class="pricing-period" data-i18n="pricing.pro.period">/ mois</span>
+                    </div>
+                    <p class="pricing-desc" data-i18n="pricing.pro.desc">Emails illimités, réponses suggérées, résumés quotidiens.</p>
+                    <ul class="pricing-features">
+                        <li><span class="icon">✓</span> <span data-i18n="pricing.pro.f1">Emails illimités</span></li>
+                        <li><span class="icon">✓</span> <span data-i18n="pricing.pro.f2">Réponses suggérées par l'IA</span></li>
+                        <li><span class="icon">✓</span> <span data-i18n="pricing.pro.f3">Résumé quotidien intelligent</span></li>
+                        <li><span class="icon">✓</span> <span data-i18n="pricing.pro.f4">Support prioritaire</span></li>
+                    </ul>
+                    <a href="#cta" class="btn btn-primary" data-i18n="pricing.pro.btn">Rejoindre la bêta Pro</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== FAQ ======== -->
+    <section class="faq section" id="faq">
+        <div class="container">
+            <div class="faq-header reveal">
+                <div class="section-label">FAQ</div>
+                <h2 class="section-title" data-i18n="faq.title">Questions fréquentes</h2>
+            </div>
+            <div class="faq-list" id="faqList">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== CTA ======== -->
+    <section class="cta-section section" id="cta">
+        <div class="container">
+            <div class="cta-box reveal">
+                <h2 class="section-title" data-i18n="cta.title">Prêt à retrouver<br><span class="gradient-text" data-i18n="cta.title2">le calme ?</span></h2>
+                <p class="section-subtitle" data-i18n="cta.subtitle">Rejoins la bêta privée et sois parmi les premiers à tester MailMood.</p>
+                <form class="cta-form" id="ctaForm">
+                    <input type="email" placeholder="ton@email.com" required id="emailInput">
+                    <button type="submit" class="btn btn-primary" data-i18n="cta.btn">S'inscrire</button>
+                </form>
+                <div class="form-success" id="formSuccess">
+                    <span data-i18n="cta.success">✓ Tu es sur la liste ! On te contacte très bientôt.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== FOOTER ======== -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-left">© 2025 MailMood</div>
+                <div class="footer-links">
+                    <a href="privacy.html" data-i18n="footer.privacy">Politique de confidentialité</a>
+                    <a href="terms.html" data-i18n="footer.terms">CGU</a>
+                    <a href="legal.html" data-i18n="footer.legal">Mentions légales</a>
+                    <a href="mailto:contact@mailmood.app" data-i18n="footer.contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+        // ============================================
+        // TRANSLATIONS
+        // ============================================
+        const translations = {
+            fr: {
+                "nav.demo": "Démo",
+                "nav.how": "Comment ça marche",
+                "nav.pricing": "Prix",
+                "nav.faq": "FAQ",
+                "nav.cta": "Rejoindre la bêta",
+                "hero.badge": "Bêta privée — Places limitées",
+                "hero.title1": "Ton email,",
+                "hero.title2": "enfin silencieux.",
+                "hero.subtitle": "MailMood trie ta boîte mail par urgence grâce à l'IA. Directement dans Gmail. Sans jamais lire tes emails.",
+                "hero.cta": "Rejoindre la bêta gratuite",
+                "hero.demo": "Voir la démo ↓",
+                "hero.note": "Gratuit · Extension Chrome · Aucun accès à tes emails",
+                "waitlist.before": "Déjà",
+                "waitlist.after": "inscrits sur la liste d'attente",
+                "demo.title": "📬 Boîte de réception",
+                "demo.all": "Tous",
+                "demo.urgent": "🔴 Urgent",
+                "demo.normal": "🟡 Normal",
+                "demo.low": "🟢 Peut attendre",
+                "problem.label": "Le constat",
+                "problem.title": "Le problème,",
+                "problem.title2": "en chiffres",
+                "problem.subtitle": "Ta boîte mail te vole plus de temps que tu ne le penses.",
+                "problem.stat1.num": "45 min",
+                "problem.stat1.label": "perdues chaque matin à trier tes emails",
+                "problem.stat2.num": "80%",
+                "problem.stat2.label": "de tes emails ne méritent pas ton attention immédiate",
+                "problem.stat3.num": "11 jours",
+                "problem.stat3.label": "par an gaspillés à gérer une boîte mail désorganisée",
+                "how.label": "Simple",
+                "how.title": "Comment ça",
+                "how.title2": "marche ?",
+                "how.subtitle": "3 étapes. Moins de 2 minutes. Zéro configuration.",
+                "how.step1.num": "Étape 1",
+                "how.step1.title": "Installe l'extension",
+                "how.step1.desc": "Un clic depuis le Chrome Web Store. Pas de compte à créer, pas de configuration complexe.",
+                "how.step2.num": "Étape 2",
+                "how.step2.title": "L'IA analyse tes emails",
+                "how.step2.desc": "MailMood lit uniquement l'expéditeur et l'objet pour scorer chaque email par urgence. Jamais le contenu.",
+                "how.step3.num": "Étape 3",
+                "how.step3.title": "Tu vois ce qui compte",
+                "how.step3.desc": "🔴 Urgent · 🟡 Normal · 🟢 Peut attendre — directement dans Gmail. Tu gagnes 30 minutes chaque matin.",
+                "privacy.label": "Vie privée",
+                "privacy.title": "Tes emails restent",
+                "privacy.title2": "tes emails.",
+                "privacy.subtitle": "On ne lit jamais le contenu de tes messages. Voici exactement ce que MailMood voit.",
+                "privacy.item1": "Seuls l'expéditeur et l'objet sont analysés",
+                "privacy.item2": "Aucun contenu d'email n'est lu ni stocké",
+                "privacy.item3": "Données traitées en temps réel, jamais conservées",
+                "privacy.item4": "Conforme RGPD — suppression en 1 clic",
+                "privacy.item5": "Code de l'extension auditable",
+                "privacy.diagram1": "✓ Lit uniquement : expéditeur + objet",
+                "privacy.diagram2": "✓ Envoie : \"Jean Dupont\" + \"Facture urgente\"",
+                "privacy.diagram3": "✓ Retourne uniquement le score d'urgence",
+                "pricing.label": "Prix",
+                "pricing.title": "Simple et",
+                "pricing.title2": "transparent.",
+                "pricing.subtitle": "Commence gratuitement. Passe à Pro quand tu veux.",
+                "pricing.free.name": "Free",
+                "pricing.free.desc": "Parfait pour tester MailMood et voir la différence.",
+                "pricing.free.f1": "20 emails scorés / jour",
+                "pricing.free.f2": "Tri par urgence 🔴🟡🟢",
+                "pricing.free.f3": "Fonctionne dans Gmail",
+                "pricing.free.btn": "Commencer gratuitement",
+                "pricing.pro.badge": "Populaire",
+                "pricing.pro.name": "Pro",
+                "pricing.pro.period": "/ mois",
+                "pricing.pro.desc": "Emails illimités, réponses suggérées, résumés quotidiens.",
+                "pricing.pro.f1": "Emails illimités",
+                "pricing.pro.f2": "Réponses suggérées par l'IA",
+                "pricing.pro.f3": "Résumé quotidien intelligent",
+                "pricing.pro.f4": "Support prioritaire",
+                "pricing.pro.btn": "Rejoindre la bêta Pro",
+                "faq.title": "Questions fréquentes",
+                "cta.title": "Prêt à retrouver",
+                "cta.title2": "le calme ?",
+                "cta.subtitle": "Rejoins la bêta privée et sois parmi les premiers à tester MailMood.",
+                "cta.btn": "S'inscrire",
+                "cta.success": "✓ Tu es sur la liste ! On te contacte très bientôt.",
+                "footer.privacy": "Politique de confidentialité",
+                "footer.terms": "CGU",
+                "footer.legal": "Mentions légales",
+                "footer.contact": "Contact"
+            },
+            en: {
+                "nav.demo": "Demo",
+                "nav.how": "How it works",
+                "nav.pricing": "Pricing",
+                "nav.faq": "FAQ",
+                "nav.cta": "Join the beta",
+                "hero.badge": "Private beta — Limited spots",
+                "hero.title1": "Your email,",
+                "hero.title2": "finally quiet.",
+                "hero.subtitle": "MailMood sorts your inbox by urgency with AI. Right inside Gmail. Without ever reading your emails.",
+                "hero.cta": "Join the free beta",
+                "hero.demo": "See the demo ↓",
+                "hero.note": "Free · Chrome Extension · No access to your emails",
+                "waitlist.before": "Already",
+                "waitlist.after": "on the waitlist",
+                "demo.title": "📬 Inbox",
+                "demo.all": "All",
+                "demo.urgent": "🔴 Urgent",
+                "demo.normal": "🟡 Normal",
+                "demo.low": "🟢 Can wait",
+                "problem.label": "The problem",
+                "problem.title": "The problem,",
+                
