@@ -1,1589 +1,2679 @@
-
 <!DOCTYPE html>
-<html lang="fr" data-theme="dark">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MailMood — Ton email enfin silencieux</title>
-    <meta name="description" content="MailMood trie ta boîte mail par urgence grâce à l'IA. Directement dans Gmail. Sans jamais lire tes emails.">
-    <meta property="og:title" content="MailMood — Ton email enfin silencieux">
-    <meta property="og:description" content="L'extension qui trie ta boîte mail par urgence. Sans jamais lire tes emails.">
-    <meta property="og:type" content="website">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📧</text></svg>">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        /* ============================================
-           RESET & VARIABLES
-           ============================================ */
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0A0A0B;
-            --bg-secondary: #111113;
-            --bg-tertiary: #18181B;
-            --bg-card: #1A1A1F;
-            --bg-card-hover: #222228;
-            --border: #27272A;
-            --border-light: #3F3F46;
-            --text-primary: #FAFAFA;
-            --text-secondary: #A1A1AA;
-            --text-muted: #71717A;
-            --accent: #8B5CF6;
-            --accent-hover: #7C3AED;
-            --accent-glow: rgba(139, 92, 246, 0.15);
-            --cyan: #06B6D4;
-            --green: #22C55E;
-            --yellow: #EAB308;
-            --red: #EF4444;
-            --radius: 12px;
-            --radius-sm: 8px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        html {
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 16px;
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        img {
-            max-width: 100%;
-            display: block;
-        }
-
-        /* ============================================
-           UTILITIES
-           ============================================ */
-        .container {
-            max-width: 1120px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        .section {
-            padding: 100px 0;
-        }
-
-        .section-label {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--accent);
-            margin-bottom: 16px;
-        }
-
-        .section-title {
-            font-size: clamp(32px, 5vw, 48px);
-            font-weight: 800;
-            line-height: 1.15;
-            margin-bottom: 20px;
-            letter-spacing: -0.02em;
-        }
-
-        .section-subtitle {
-            font-size: 18px;
-            color: var(--text-secondary);
-            max-width: 600px;
-            line-height: 1.7;
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, var(--accent), var(--cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* ============================================
-           NAVBAR
-           ============================================ */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 16px 0;
-            transition: var(--transition);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            background: rgba(10, 10, 11, 0.8);
-            border-bottom: 1px solid transparent;
-        }
-
-        .navbar.scrolled {
-            border-bottom-color: var(--border);
-        }
-
-        .navbar .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-logo {
-            font-size: 20px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-logo-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, var(--accent), var(--cyan));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .lang-toggle {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: inherit;
-        }
-
-        .lang-toggle:hover {
-            border-color: var(--border-light);
-            color: var(--text-primary);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: inherit;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--border-light);
-            background: var(--bg-card);
-        }
-
-        .nav-cta-mobile {
-            display: none;
-        }
-
-        /* Hamburger */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .hamburger span {
-            width: 22px;
-            height: 2px;
-            background: var(--text-primary);
-            border-radius: 2px;
-            transition: var(--transition);
-        }
-
-        /* ============================================
-           HERO
-           ============================================ */
-        .hero {
-            padding: 160px 0 100px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -200px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 800px;
-            height: 600px;
-            background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-badge .pulse {
-            width: 8px;
-            height: 8px;
-            background: var(--green);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.5); }
-        }
-
-        .hero h1 {
-            font-size: clamp(42px, 7vw, 72px);
-            font-weight: 800;
-            line-height: 1.05;
-            letter-spacing: -0.03em;
-            margin-bottom: 24px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(17px, 2.5vw, 20px);
-            color: var(--text-secondary);
-            max-width: 560px;
-            margin: 0 auto 40px;
-            line-height: 1.7;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-buttons {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 24px;
-            position: relative;
-            z-index: 1;
-            flex-wrap: wrap;
-        }
-
-        .hero-buttons .btn-primary {
-            padding: 14px 28px;
-            font-size: 16px;
-        }
-
-        .hero-note {
-            font-size: 13px;
-            color: var(--text-muted);
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Waitlist Counter */
-        .waitlist-counter {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 32px;
-            padding: 12px 24px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            position: relative;
-            z-index: 1;
-        }
-
-        .waitlist-avatars {
-            display: flex;
-        }
-
-        .waitlist-avatars span {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 2px solid var(--bg-secondary);
-            margin-left: -8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-
-        .waitlist-avatars span:first-child {
-            margin-left: 0;
-        }
-
-        .waitlist-avatars .av1 { background: #7C3AED; }
-        .waitlist-avatars .av2 { background: #2563EB; }
-        .waitlist-avatars .av3 { background: #0891B2; }
-        .waitlist-avatars .av4 { background: #059669; }
-
-        .waitlist-count {
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        /* ============================================
-           DEMO
-           ============================================ */
-        .demo {
-            padding: 60px 0 100px;
-        }
-
-        .demo-window {
-            max-width: 800px;
-            margin: 0 auto;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.5);
-        }
-
-        .demo-toolbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .demo-dots {
-            display: flex;
-            gap: 8px;
-        }
-
-        .demo-dots span {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .demo-dots .dot-red { background: #EF4444; }
-        .demo-dots .dot-yellow { background: #EAB308; }
-        .demo-dots .dot-green { background: #22C55E; }
-
-        .demo-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .demo-filters {
-            display: flex;
-            gap: 8px;
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border);
-            overflow-x: auto;
-        }
-
-        .demo-filter {
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 500;
-            background: var(--bg-tertiary);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-            font-family: inherit;
-        }
-
-        .demo-filter:hover,
-        .demo-filter.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .demo-emails {
-            padding: 8px;
-        }
-
-        .demo-email {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
-            border-radius: 10px;
-            transition: var(--transition);
-            cursor: default;
-            animation: fadeIn 0.4s ease-out both;
-        }
-
-        .demo-email:hover {
-            background: var(--bg-tertiary);
-        }
-
-        .demo-email:nth-child(1) { animation-delay: 0.1s; }
-        .demo-email:nth-child(2) { animation-delay: 0.2s; }
-        .demo-email:nth-child(3) { animation-delay: 0.3s; }
-        .demo-email:nth-child(4) { animation-delay: 0.4s; }
-        .demo-email:nth-child(5) { animation-delay: 0.5s; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .email-score {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-
-        .score-red { background: rgba(239, 68, 68, 0.15); }
-        .score-yellow { background: rgba(234, 179, 8, 0.15); }
-        .score-green { background: rgba(34, 197, 94, 0.15); }
-
-        .email-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .email-from {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .email-subject {
-            font-size: 13px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .email-time {
-            font-size: 12px;
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
-
-        .email-tag {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 6px;
-            flex-shrink: 0;
-        }
-
-        .tag-urgent { background: rgba(239, 68, 68, 0.15); color: var(--red); }
-        .tag-normal { background: rgba(234, 179, 8, 0.15); color: var(--yellow); }
-        .tag-low { background: rgba(34, 197, 94, 0.15); color: var(--green); }
-
-        /* ============================================
-           PROBLEM SECTION
-           ============================================ */
-        .problem {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .problem-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-
-        .problem-header .section-subtitle {
-            margin: 0 auto;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 40px 32px;
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            border-color: var(--border-light);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-        }
-
-        .stat-number {
-            font-size: clamp(36px, 5vw, 56px);
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            margin-bottom: 8px;
-        }
-
-        .stat-number.red { color: var(--red); }
-        .stat-number.yellow { color: var(--yellow); }
-        .stat-number.accent { color: var(--accent); }
-
-        .stat-label {
-            font-size: 15px;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-
-        /* ============================================
-           HOW IT WORKS
-           ============================================ */
-        .how-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-
-        .how-header .section-subtitle {
-            margin: 0 auto;
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-        }
-
-        .step {
-            text-align: center;
-            padding: 40px 24px;
-        }
-
-        .step-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 24px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-        }
-
-        .step-number {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-        }
-
-        .step h3 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .step p {
-            font-size: 15px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-
-        /* ============================================
-           PRIVACY SECTION
-           ============================================ */
-        .privacy {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .privacy-inner {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 64px;
-            align-items: center;
-        }
-
-        .privacy-content .section-title {
-            margin-bottom: 24px;
-        }
-
-        .privacy-content .section-subtitle {
-            margin-bottom: 32px;
-        }
-
-        .privacy-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .privacy-list li {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            font-size: 15px;
-            color: var(--text-secondary);
-        }
-
-        .privacy-list .check {
-            color: var(--green);
-            font-size: 18px;
-            flex-shrink: 0;
-            margin-top: 1px;
-        }
-
-        .privacy-visual {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 40px;
-        }
-
-        .privacy-diagram {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .diagram-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .diagram-box {
-            padding: 14px 20px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 500;
-            flex: 1;
-            text-align: center;
-        }
-
-        .diagram-box.highlight {
-            border-color: var(--accent);
-            background: rgba(139, 92, 246, 0.08);
-        }
-
-        .diagram-arrow {
-            color: var(--text-muted);
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .diagram-label {
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
-            padding: 8px 16px;
-            background: rgba(34, 197, 94, 0.08);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            border-radius: 100px;
-        }
-
-        /* ============================================
-           PRICING
-           ============================================ */
-        .pricing-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-
-        .pricing-header .section-subtitle {
-            margin: 0 auto;
-        }
-
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .pricing-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 40px 32px;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-        }
-
-        .pricing-card.featured {
-            border-color: var(--accent);
-            box-shadow: 0 0 40px var(--accent-glow);
-        }
-
-        .pricing-badge {
-            position: absolute;
-            top: -12px;
-            right: 24px;
-            background: var(--accent);
-            color: white;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 100px;
-        }
-
-        .pricing-name {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .pricing-price {
-            display: flex;
-            align-items: baseline;
-            gap: 4px;
-            margin-bottom: 8px;
-        }
-
-        .pricing-amount {
-            font-size: 42px;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-        }
-
-        .pricing-period {
-            font-size: 15px;
-            color: var(--text-muted);
-        }
-
-        .pricing-desc {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-            line-height: 1.6;
-        }
-
-        .pricing-features {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 32px;
-        }
-
-        .pricing-features li {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .pricing-features .icon {
-            color: var(--green);
-            flex-shrink: 0;
-        }
-
-        .pricing-card .btn {
-            width: 100%;
-            padding: 12px;
-        }
-
-        /* ============================================
-           FAQ
-           ============================================ */
-        .faq {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .faq-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-
-        .faq-list {
-            max-width: 700px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .faq-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-
-        .faq-item:hover {
-            border-color: var(--border-light);
-        }
-
-        .faq-question {
-            width: 100%;
-            background: none;
-            border: none;
-            padding: 20px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-            cursor: pointer;
-            font-family: inherit;
-            text-align: left;
-        }
-
-        .faq-question .icon {
-            font-size: 20px;
-            color: var(--text-muted);
-            transition: var(--transition);
-            flex-shrink: 0;
-            margin-left: 16px;
-        }
-
-        .faq-item.open .faq-question .icon {
-            transform: rotate(45deg);
-            color: var(--accent);
-        }
-
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .faq-answer-inner {
-            padding: 0 24px 20px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.8;
-        }
-
-        /* ============================================
-           CTA SECTION
-           ============================================ */
-        .cta-section {
-            text-align: center;
-        }
-
-        .cta-box {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 64px 40px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-box::before {
-            content: '';
-            position: absolute;
-            top: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 400px;
-            height: 300px;
-            background: radial-gradient(ellipse, var(--accent-glow), transparent 70%);
-            pointer-events: none;
-        }
-
-        .cta-box .section-title {
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-box .section-subtitle {
-            margin: 0 auto 32px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-form {
-            display: flex;
-            gap: 10px;
-            max-width: 440px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-form input {
-            flex: 1;
-            padding: 14px 18px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-size: 15px;
-            font-family: inherit;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .cta-form input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        .cta-form input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .cta-form .btn {
-            padding: 14px 24px;
-        }
-
-        .form-success {
-            display: none;
-            padding: 16px 24px;
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: var(--radius-sm);
-            color: var(--green);
-            font-size: 14px;
-            font-weight: 500;
-            margin-top: 16px;
-            max-width: 440px;
-            margin-left: auto;
-            margin-right: auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .form-success.show {
-            display: block;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        /* ============================================
-           FOOTER
-           ============================================ */
-        footer {
-            padding: 40px 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .footer-left {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            font-size: 13px;
-            color: var(--text-muted);
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--text-secondary);
-        }
-
-        /* ============================================
-           SCROLL REVEAL
-           ============================================ */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 768px) {
-            .section {
-                padding: 72px 0;
-            }
-
-            .nav-links {
-                display: none;
-                position: fixed;
-                top: 64px;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: var(--bg-primary);
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 32px;
-                z-index: 999;
-            }
-
-            .nav-links.open {
-                display: flex;
-            }
-
-            .nav-links a {
-                font-size: 18px;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .nav-cta-desktop {
-                display: none;
-            }
-
-            .nav-cta-mobile {
-                display: inline-flex;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .steps {
-                grid-template-columns: 1fr;
-            }
-
-            .privacy-inner {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .pricing-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .cta-form {
-                flex-direction: column;
-            }
-
-            .hero h1 {
-                font-size: clamp(36px, 10vw, 54px);
-            }
-
-            .cta-box {
-                padding: 48px 24px;
-            }
-
-            .footer-inner {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .footer-links {
-                justify-content: center;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MailMood — Ton email, enfin silencieux.</title>
+<meta name="description" content="MailMood trie ta boîte mail par urgence grâce à l'IA. Directement dans Gmail. Sans jamais lire tes emails.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   VARIABLES & RESET
+   ============================================ */
+:root {
+  --bg: #0a0a0f;
+  --bg-card: #12121a;
+  --bg-card-hover: #1a1a25;
+  --text: #e8e8ed;
+  --text-muted: #8888a0;
+  --primary: #7c5cff;
+  --primary-glow: rgba(124, 92, 255, 0.3);
+  --accent: #00d4aa;
+  --accent-glow: rgba(0, 212, 170, 0.3);
+  --border: rgba(255,255,255,0.06);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: 'Inter', -apple-system, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { cursor: pointer; font-family: inherit; border: none; }
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 16px 0;
+  background: rgba(10, 10, 15, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.navbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+
+.nav-logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--primary), #5a3de8);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  transition: color 0.3s;
+  font-weight: 500;
+}
+
+.nav-links a:hover { color: var(--text); }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-lang {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-lang:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  background: #6a4be8;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 30px var(--primary-glow);
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-muted);
+  transform: translateY(-1px);
+}
+
+.mobile-toggle {
+  display: none;
+  background: none;
+  color: var(--text);
+  font-size: 1.5rem;
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero {
+  padding: 160px 0 100px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse, var(--primary-glow) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.hero-badge-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.hero h1 {
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  animation: fadeUp 0.8s ease 0.1s both;
+}
+
+.hero h1 .gradient-text {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background-size: 200% 200%;
+  animation: gradientMove 3s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  color: var(--text-muted);
+  max-width: 560px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+  animation: fadeUp 0.8s ease 0.2s both;
+}
+
+.hero-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  animation: fadeUp 0.8s ease 0.3s both;
+}
+
+.hero-buttons .btn-primary {
+  padding: 14px 32px;
+  font-size: 1rem;
+}
+
+.hero-buttons .btn-secondary {
+  padding: 14px 32px;
+  font-size: 1rem;
+}
+
+.hero-trust {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  animation: fadeUp 0.8s ease 0.35s both;
+}
+
+.hero-social-proof {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 12px 24px;
+  border-radius: 50px;
+  animation: fadeUp 0.8s ease 0.4s both;
+}
+
+.avatar-stack {
+  display: flex;
+}
+
+.avatar-stack span {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  margin-left: -8px;
+  border: 2px solid var(--bg-card);
+}
+
+.avatar-stack span:first-child { margin-left: 0; }
+.avatar-stack span:nth-child(1) { background: #7c5cff; }
+.avatar-stack span:nth-child(2) { background: #ff5c8a; }
+.avatar-stack span:nth-child(3) { background: #00d4aa; }
+.avatar-stack span:nth-child(4) { background: #ffa64c; }
+
+.hero-social-proof p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.hero-social-proof strong {
+  color: var(--text);
+}
+
+/* ============================================
+   DEMO SECTION
+   ============================================ */
+.demo {
+  padding: 100px 0;
+  position: relative;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--primary);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 560px;
+  margin-bottom: 48px;
+}
+
+.demo-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+}
+
+.demo-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.demo-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.demo-dot:nth-child(1) { background: #ff5f57; }
+.demo-dot:nth-child(2) { background: #ffbd2e; }
+.demo-dot:nth-child(3) { background: #28ca41; }
+
+.demo-toolbar span {
+  margin-left: 12px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.demo-content {
+  padding: 32px;
+}
+
+.demo-email-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.demo-email {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.demo-email.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.demo-email-priority {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: center;
+}
+
+.priority-urgent {
+  background: rgba(255, 59, 48, 0.15);
+  color: #ff3b30;
+  border: 1px solid rgba(255, 59, 48, 0.2);
+}
+
+.priority-medium {
+  background: rgba(255, 166, 76, 0.15);
+  color: #ffa64c;
+  border: 1px solid rgba(255, 166, 76, 0.2);
+}
+
+.priority-low {
+  background: rgba(0, 212, 170, 0.15);
+  color: #00d4aa;
+  border: 1px solid rgba(0, 212, 170, 0.2);
+}
+
+.priority-spam {
+  background: rgba(136, 136, 160, 0.15);
+  color: #8888a0;
+  border: 1px solid rgba(136, 136, 160, 0.2);
+}
+
+.demo-email-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.demo-email-sender {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.demo-email-subject {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.demo-email-time {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ============================================
+   HOW IT WORKS
+   ============================================ */
+.how {
+  padding: 100px 0;
+}
+
+.how-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.how-header .section-subtitle {
+  margin: 0 auto;
+}
+
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.how-step {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  text-align: center;
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.how-step:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.how-step-number {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--primary), #5a3de8);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+  margin: 0 auto 24px;
+}
+
+.how-step-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.how-step h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.how-step p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ============================================
+   FEATURES / BENEFITS
+   ============================================ */
+.features {
+  padding: 100px 0;
+}
+
+.features-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.features-header .section-subtitle {
+  margin: 0 auto;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  transition: all 0.4s ease;
+}
+
+.feature-card:hover {
+  border-color: rgba(124, 92, 255, 0.3);
+  background: var(--bg-card-hover);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.feature-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ============================================
+   STATS
+   ============================================ */
+.stats {
+  padding: 80px 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   PRICING
+   ============================================ */
+.pricing {
+  padding: 100px 0;
+}
+
+.pricing-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.pricing-header .section-subtitle {
+  margin: 0 auto;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s ease;
+}
+
+.pricing-card.popular {
+  border-color: var(--primary);
+  position: relative;
+  transform: scale(1.05);
+  box-shadow: 0 20px 60px var(--primary-glow);
+}
+
+.pricing-card.popular::before {
+  content: '⭐ Le + populaire';
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 16px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+}
+
+.pricing-card.popular:hover {
+  transform: scale(1.05) translateY(-4px);
+}
+
+.pricing-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.pricing-price {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.pricing-price span {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.pricing-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+
+.pricing-features {
+  list-style: none;
+  margin-bottom: 32px;
+  flex: 1;
+}
+
+.pricing-features li {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pricing-features li::before {
+  content: '✓';
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.pricing-card .btn-primary,
+.pricing-card .btn-secondary {
+  width: 100%;
+  text-align: center;
+  padding: 14px;
+}
+/* ============================================
+   TESTIMONIALS
+   ============================================ */
+.testimonials {
+  padding: 100px 0;
+}
+
+.testimonials-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.testimonials-header .section-subtitle {
+  margin: 0 auto;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.testimonial-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  transition: all 0.4s ease;
+}
+
+.testimonial-card:hover {
+  border-color: rgba(124,92,255,0.3);
+  transform: translateY(-4px);
+}
+
+.testimonial-stars {
+  color: #ffa64c;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+
+.testimonial-text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  font-style: italic;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.testimonial-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: white;
+}
+
+.testimonial-author-info h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.testimonial-author-info p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   FAQ
+   ============================================ */
+.faq {
+  padding: 100px 0;
+}
+
+.faq-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.faq-header .section-subtitle {
+  margin: 0 auto;
+}
+
+.faq-list {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faq-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  border-color: rgba(124,92,255,0.2);
+}
+
+.faq-question {
+  width: 100%;
+  background: none;
+  color: var(--text);
+  padding: 20px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s;
+}
+
+.faq-question:hover {
+  color: var(--primary);
+}
+
+.faq-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+  color: var(--text-muted);
+}
+
+.faq-item.active .faq-icon {
+  transform: rotate(45deg);
+  color: var(--primary);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 300px;
+}
+
+.faq-answer p {
+  padding: 0 24px 20px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ============================================
+   CTA FINAL
+   ============================================ */
+.cta {
+  padding: 100px 0;
+  text-align: center;
+}
+
+.cta-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 80px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-box::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse, var(--primary-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-box h2 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.cta-box p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 500px;
+  margin: 0 auto 40px;
+  position: relative;
+}
+
+.cta-box .btn-primary {
+  padding: 16px 40px;
+  font-size: 1.05rem;
+  position: relative;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  padding: 60px 0 32px;
+  border-top: 1px solid var(--border);
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.footer-links a {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  transition: color 0.3s;
+}
+
+.footer-links a:hover { color: var(--text); }
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   MODAL WAITLIST
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 48px 40px;
+  max-width: 460px;
+  width: 90%;
+  text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal {
+  transform: scale(1);
+}
+
+.modal h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.modal p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: var(--font);
+  margin-bottom: 16px;
+  transition: border-color 0.3s;
+  outline: none;
+}
+
+.modal-input:focus {
+  border-color: var(--primary);
+}
+
+.modal .btn-primary {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.modal-close {
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  transition: color 0.3s;
+}
+
+.modal-close:hover { color: var(--text); }
+
+.modal-success {
+  display: none;
+}
+
+.modal-success.show {
+  display: block;
+}
+
+.modal-success .checkmark {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  .how-steps {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .pricing-card.popular {
+    transform: none;
+  }
+  .pricing-card.popular:hover {
+    transform: translateY(-4px);
+  }
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-right .btn-primary { display: none; }
+  .mobile-toggle { display: block; }
+  .hero { padding: 130px 0 80px; }
+  .hero-buttons { flex-direction: column; }
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-secondary { width: 100%; text-align: center; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-content {
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+  }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+  .cta-box { padding: 60px 24px; }
+}
+
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .demo-email { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .demo-email-time { display: none; }
+}
+</style>
 </head>
 <body>
 
-    <!-- ======== NAVBAR ======== -->
-    <nav class="navbar" id="navbar">
-        <div class="container">
-            <a href="#" class="nav-logo">
-                <div class="nav-logo-icon">📧</div>
-                MailMood
-            </a>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#demo" data-i18n="nav.demo">Démo</a></li>
-                <li><a href="#how" data-i18n="nav.how">Comment ça marche</a></li>
-                <li><a href="#pricing" data-i18n="nav.pricing">Prix</a></li>
-                <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
-                <li class="nav-cta-mobile"><a href="#cta" class="btn btn-primary" data-i18n="nav.cta">Rejoindre la bêta</a></li>
-            </ul>
-            <div class="nav-right">
-                <button class="lang-toggle" id="langToggle">EN</button>
-                <a href="#cta" class="btn btn-primary nav-cta-desktop" data-i18n="nav.cta">Rejoindre la bêta</a>
-                <button class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </nav>
+<!-- ============================================
+     NAVBAR
+     ============================================ -->
+<nav class="navbar">
+  <div class="container">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">📧</div>
+      MailMood
+    </a>
+    <ul class="nav-links">
+      <li><a href="#demo">Démo</a></li>
+      <li><a href="#how">Comment ça marche</a></li>
+      <li><a href="#pricing">Prix</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-lang" id="langToggle">EN</button>
+      <button class="btn-primary" onclick="openModal()">Rejoindre la bêta</button>
+      <button class="mobile-toggle" id="mobileToggle">☰</button>
+    </div>
+  </div>
+</nav>
 
-    <!-- ======== HERO ======== -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-badge">
-                <span class="pulse"></span>
-                <span data-i18n="hero.badge">Bêta privée — Places limitées</span>
-            </div>
-            <h1>
-                <span data-i18n="hero.title1">Ton email,</span><br>
-                <span class="gradient-text" data-i18n="hero.title2">enfin silencieux.</span>
-            </h1>
-            <p class="hero-subtitle" data-i18n="hero.subtitle">
-                MailMood trie ta boîte mail par urgence grâce à l'IA. Directement dans Gmail. Sans jamais lire tes emails.
-            </p>
-            <div class="hero-buttons">
-                <a href="#cta" class="btn btn-primary" data-i18n="hero.cta">Rejoindre la bêta gratuite</a>
-                <a href="#demo" class="btn btn-secondary" data-i18n="hero.demo">Voir la démo ↓</a>
-            </div>
-            <p class="hero-note" data-i18n="hero.note">Gratuit · Extension Chrome · Aucun accès à tes emails</p>
-            <div class="waitlist-counter">
-                <div class="waitlist-avatars">
-                    <span class="av1">A</span>
-                    <span class="av2">M</span>
-                    <span class="av3">S</span>
-                    <span class="av4">K</span>
-                </div>
-                <span>
-                    <span data-i18n="waitlist.before">Déjà</span>
-                    <span class="waitlist-count" id="waitlistCount">847</span>
-                    <span data-i18n="waitlist.after">inscrits sur la liste d'attente</span>
-                </span>
-            </div>
-        </div>
-    </section>
+<!-- ============================================
+     HERO
+     ============================================ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Bêta privée — Places limitées
+    </div>
+    <h1>
+      Ton email,<br>
+      <span class="gradient-text">enfin silencieux.</span>
+    </h1>
+    <p class="hero-subtitle">
+      MailMood trie ta boîte mail par urgence grâce à l'IA.
+      Directement dans Gmail. Sans jamais lire tes emails.
+    </p>
+    <div class="hero-buttons">
+      <button class="btn-primary" onclick="openModal()">Rejoindre la bêta gratuite</button>
+      <a href="#demo" class="btn-secondary">Voir la démo ↓</a>
+    </div>
+    <p class="hero-trust">Gratuit · Extension Chrome · Aucun accès à tes emails</p>
+    <div class="hero-social-proof">
+      <div class="avatar-stack">
+        <span>A</span><span>M</span><span>S</span><span>K</span>
+      </div>
+      <p>Déjà <strong id="waitlistCount">847</strong> inscrits sur la liste d'attente</p>
+    </div>
+  </div>
+</section>
 
-    <!-- ======== DEMO ======== -->
-    <section class="demo" id="demo">
-        <div class="container">
-            <div class="demo-window reveal">
-                <div class="demo-toolbar">
-                    <div class="demo-dots">
-                        <span class="dot-red"></span>
-                        <span class="dot-yellow"></span>
-                        <span class="dot-green"></span>
-                    </div>
-                    <div class="demo-title" data-i18n="demo.title">📬 Boîte de réception</div>
-                    <div style="width:52px"></div>
-                </div>
-                <div class="demo-filters">
-                    <button class="demo-filter active" data-filter="all" data-i18n="demo.all">Tous</button>
-                    <button class="demo-filter" data-filter="urgent" data-i18n="demo.urgent">🔴 Urgent</button>
-                    <button class="demo-filter" data-filter="normal" data-i18n="demo.normal">🟡 Normal</button>
-                    <button class="demo-filter" data-filter="low" data-i18n="demo.low">🟢 Peut attendre</button>
-                </div>
-                <div class="demo-emails" id="demoEmails">
-                    <!-- Filled by JS -->
-                </div>
+<!-- ============================================
+     DEMO
+     ============================================ -->
+<section class="demo" id="demo">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-label">⚡ Démo en direct</span>
+      <h2 class="section-title">Regarde MailMood en action</h2>
+      <p class="section-subtitle">L'IA analyse le contexte, le ton et l'expéditeur pour classer chaque email automatiquement.</p>
+    </div>
+    <div class="demo-container reveal">
+      <div class="demo-toolbar">
+        <span class="demo-dot"></span>
+        <span class="demo-dot"></span>
+        <span class="demo-dot"></span>
+        <span>Gmail — Boîte de réception (12)</span>
+      </div>
+      <div class="demo-content">
+        <div class="demo-email-list" id="demoEmails">
+          <div class="demo-email" data-delay="200">
+            <div class="demo-email-priority priority-urgent">🔴 Urgent</div>
+            <div class="demo-email-info">
+              <div class="demo-email-sender">Marie Dupont — Directrice</div>
+              <div class="demo-email-subject">Réunion budget déplacée à 14h — Réponse requise avant midi</div>
             </div>
+            <div class="demo-email-time">09:14</div>
+          </div>
+          <div class="demo-email" data-delay="500">
+            <div class="demo-email-priority priority-urgent">🔴 Urgent</div>
+            <div class="demo-email-info">
+              <div class="demo-email-sender">Client — Acme Corp</div>
+              <div class="demo-email-subject">URGENT : Bug critique en production, site down</div>
+            </div>
+            <div class="demo-email-time">09:02</div>
+          </div>
+          <div class="demo-email" data-delay="800">
+            <div class="demo-email-priority priority-medium">🟡 Moyen</div>
+            <div class="demo-email-info">
+              <div class="demo-email-sender">Thomas — Équipe Produit</div>
+              <div class="demo-email-subject">Specs V2 prêtes — Review quand tu peux</div>
+            </div>
+            <div class="demo-email-time">08:45</div>
+          </div>
+          <div class="demo-email" data-delay="1100">
+            <div class="demo-email-priority priority-low">🟢 Faible</div>
+            <div class="demo-email-info">
+              <div class="demo-email-sender">LinkedIn</div>
+              <div class="demo-email-subject">3 personnes ont consulté votre profil cette semaine</div>
+            </div>
+            <div class="demo-email-time">07:30</div>
+          </div>
+          <div class="demo-email" data-delay="1400">
+            <div class="demo-email-priority priority-spam">🔘 Bruit</div>
+            <div class="demo-email-info">
+              <div class="demo-email-sender">Newsletter TechCrunch</div>
+              <div class="demo-email-subject">Les 10 startups à suivre en 2025…</div>
+            </div>
+            <div class="demo-email-time">06:00</div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- ======== PROBLEM ======== -->
-    <section class="problem section" id="problem">
-        <div class="container">
-            <div class="problem-header reveal">
-                <div class="section-label" data-i18n="problem.label">Le constat</div>
-                <h2 class="section-title">
-                    <span data-i18n="problem.title">Le problème,</span><br>
-                    <span class="gradient-text" data-i18n="problem.title2">en chiffres</span>
-                </h2>
-                <p class="section-subtitle" data-i18n="problem.subtitle">Ta boîte mail te vole plus de temps que tu ne le penses.</p>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card reveal">
-                    <div class="stat-number red" data-i18n="problem.stat1.num">45 min</div>
-                    <div class="stat-label" data-i18n="problem.stat1.label">perdues chaque matin à trier tes emails</div>
-                </div>
-                <div class="stat-card reveal">
-                    <div class="stat-number yellow" data-i18n="problem.stat2.num">80%</div>
-                    <div class="stat-label" data-i18n="problem.stat2.label">de tes emails ne méritent pas ton attention immédiate</div>
-                </div>
-                <div class="stat-card reveal">
-                    <div class="stat-number accent" data-i18n="problem.stat3.num">11 jours</div>
-                    <div class="stat-label" data-i18n="problem.stat3.label">par an gaspillés à gérer une boîte mail désorganisée</div>
-                </div>
-            </div>
+<!-- ============================================
+     HOW IT WORKS
+     ============================================ -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="how-header reveal">
+      <span class="section-label">🔧 Comment ça marche</span>
+      <h2 class="section-title">3 étapes. 30 secondes.</h2>
+      <p class="section-subtitle">Pas de configuration complexe. Pas de compte à créer. Juste une extension Chrome.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step reveal">
+        <div class="how-step-number">1</div>
+        <div class="how-step-icon">📥</div>
+        <h3>Installe l'extension</h3>
+        <p>Un clic depuis le Chrome Web Store. Aucune inscription requise pour la bêta.</p>
+      </div>
+      <div class="how-step reveal">
+        <div class="how-step-number">2</div>
+        <div class="how-step-icon">🤖</div>
+        <h3>L'IA analyse tes mails</h3>
+        <p>MailMood lit les métadonnées (objet, expéditeur, heure) et classe par urgence. Sans jamais accéder au contenu.</p>
+      </div>
+      <div class="how-step reveal">
+        <div class="how-step-number">3</div>
+        <div class="how-step-icon">✨</div>
+        <h3>Ta boîte est triée</h3>
+        <p>Les badges de priorité apparaissent directement dans Gmail. Tu sais quoi lire en premier.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FEATURES
+     ============================================ -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="features-header reveal">
+      <span class="section-label">🎯 Pourquoi MailMood</span>
+      <h2 class="section-title">Conçu pour ta tranquillité</h2>
+      <p class="section-subtitle">Chaque fonctionnalité est pensée pour réduire ta charge mentale.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔒</div>
+        <h3>100% privé</h3>
+        <p>Tes emails restent chez toi. L'IA n'analyse que les métadonnées — jamais le contenu de tes messages.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">⚡</div>
+        <h3>Instantané</h3>
+        <p>Le tri se fait en temps réel dès qu'un nouvel email arrive. Aucun délai, aucune latence perceptible.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🧠</div>
+        <h3>IA qui apprend</h3>
+        <p>Plus tu utilises MailMood, plus le tri devient précis. L'algorithme s'adapte à tes habitudes.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🎨</div>
+        <h3>Intégré à Gmail</h3>
+        <p>Pas de nouvelle app à ouvrir. Les badges de priorité apparaissent directement dans ton interface Gmail existante.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     STATS
+     ============================================ -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="42">0</div>
+        <div class="stat-label">min économisées / jour</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="97">0</div>
+        <div class="stat-label">% de précision du tri</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="847">0</div>
+        <div class="stat-label">bêta-testeurs inscrits</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="0">0</div>
+        <div class="stat-label">email lu par l'IA</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     PRICING
+     ============================================ -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="pricing-header reveal">
+      <span class="section-label">💎 Tarifs</span>
+      <h2 class="section-title">Simple et transparent</h2>
+      <p class="section-subtitle">Commence gratuitement. Upgrade quand tu veux.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div class="pricing-name">Free</div>
+        <div class="pricing-price">0€</div>
+        <div class="pricing-desc">Pour découvrir MailMood</div>
+        <ul class="pricing-features">
+          <li>50 emails triés / jour</li>
+          <li>3 niveaux de priorité</li>
+          <li>Badge dans Gmail</li>
+        </ul>
+        <button class="btn-secondary" onclick="openModal()">Commencer gratuitement</button>
+      </div>
+      <div class="pricing-card popular reveal">
+        <div class="pricing-name">Pro</div>
+        <div class="pricing-price">4€ <span>/ mois</span></div>
+        <div class="pricing-desc">Pour les pros de l'email</div>
+        <ul class="pricing-features">
+          <li>Emails illimités</li>
+          <li>5 niveaux de priorité</li>
+          <li>IA personnalisée</li>
+          <li>Résumé quotidien</li>
+          <li>Support prioritaire</li>
+        </ul>
+        <button class="btn-primary" onclick="openModal()">Rejoindre la bêta Pro</button>
+      </div>
+      <div class="pricing-card reveal">
+        <div class="pricing-name">Team</div>
+        <div class="pricing-price">9€ <span>/ mois / user</span></div>
+        <div class="pricing-desc">Pour les équipes</div>
+        <ul class="pricing-features">
+          <li>Tout du plan Pro</li>
+          <li>Dashboard équipe</li>
+          <li>Règles partagées</li>
+          <li>Admin panel</li>
+        </ul>
+        <button class="btn-secondary" onclick="openModal()">Contacter l'équipe</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     TESTIMONIALS
+     ============================================ -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div class="testimonials-header reveal">
+      <span class="section-label">💬 Témoignages</span>
+      <h2 class="section-title">Ils ont testé la bêta</h2>
+      <p class="section-subtitle">Retours de nos premiers utilisateurs.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Je recevais 120 mails par jour. Maintenant je sais lesquels lire en premier en 2 secondes."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#7c5cff;">S</div>
+          <div class="testimonial-author-info">
+            <h4>Sophie Martin</h4>
+            <p>Head of Ops — Startup SaaS</p>
+          </div>
         </div>
-    </section>
-
-    <!-- ======== HOW IT WORKS ======== -->
-    <section class="section" id="how">
-        <div class="container">
-            <div class="how-header reveal">
-                <div class="section-label" data-i18n="how.label">Simple</div>
-                <h2 class="section-title">
-                    <span data-i18n="how.title">Comment ça</span><br>
-                    <span class="gradient-text" data-i18n="how.title2">marche ?</span>
-                </h2>
-                <p class="section-subtitle" data-i18n="how.subtitle">3 étapes. Moins de 2 minutes. Zéro configuration.</p>
-            </div>
-            <div class="steps">
-                <div class="step reveal">
-                    <div class="step-icon">⬇️</div>
-                    <div class="step-number" data-i18n="how.step1.num">Étape 1</div>
-                    <h3 data-i18n="how.step1.title">Installe l'extension</h3>
-                    <p data-i18n="how.step1.desc">Un clic depuis le Chrome Web Store. Pas de compte à créer, pas de configuration complexe.</p>
-                </div>
-                <div class="step reveal">
-                    <div class="step-icon">🧠</div>
-                    <div class="step-number" data-i18n="how.step2.num">Étape 2</div>
-                    <h3 data-i18n="how.step2.title">L'IA analyse tes emails</h3>
-                    <p data-i18n="how.step2.desc">MailMood lit uniquement l'expéditeur et l'objet pour scorer chaque email par urgence. Jamais le contenu.</p>
-                </div>
-                <div class="step reveal">
-                    <div class="step-icon">✨</div>
-                    <div class="step-number" data-i18n="how.step3.num">Étape 3</div>
-                    <h3 data-i18n="how.step3.title">Tu vois ce qui compte</h3>
-                    <p data-i18n="how.step3.desc">🔴 Urgent · 🟡 Normal · 🟢 Peut attendre — directement dans Gmail. Tu gagnes 30 minutes chaque matin.</p>
-                </div>
-            </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Le fait que l'IA ne lise pas mes mails, c'est ce qui m'a convaincu. Enfin un outil qui respecte ma vie privée."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#00d4aa;">L</div>
+          <div class="testimonial-author-info">
+            <h4>Lucas Renard</h4>
+            <p>Avocat — Cabinet indépendant</p>
+          </div>
         </div>
-    </section>
-
-    <!-- ======== PRIVACY ======== -->
-    <section class="privacy section" id="privacy">
-        <div class="container">
-            <div class="privacy-inner">
-                <div class="privacy-content reveal">
-                    <div class="section-label" data-i18n="privacy.label">Vie privée</div>
-                    <h2 class="section-title" data-i18n="privacy.title">Tes emails restent<br><span class="gradient-text" data-i18n="privacy.title2">tes emails.</span></h2>
-                    <p class="section-subtitle" data-i18n="privacy.subtitle">On ne lit jamais le contenu de tes messages. Voici exactement ce que MailMood voit.</p>
-                    <ul class="privacy-list">
-                        <li><span class="check">✓</span> <span data-i18n="privacy.item1">Seuls l'expéditeur et l'objet sont analysés</span></li>
-                        <li><span class="check">✓</span> <span data-i18n="privacy.item2">Aucun contenu d'email n'est lu ni stocké</span></li>
-                        <li><span class="check">✓</span> <span data-i18n="privacy.item3">Données traitées en temps réel, jamais conservées</span></li>
-                        <li><span class="check">✓</span> <span data-i18n="privacy.item4">Conforme RGPD — suppression en 1 clic</span></li>
-                        <li><span class="check">✓</span> <span data-i18n="privacy.item5">Code de l'extension auditable</span></li>
-                    </ul>
-                </div>
-                <div class="privacy-visual reveal">
-                    <div class="privacy-diagram">
-                        <div class="diagram-row">
-                            <div class="diagram-box">📧 Gmail</div>
-                            <div class="diagram-arrow">→</div>
-                            <div class="diagram-box highlight">🔒 Extension</div>
-                        </div>
-                        <div class="diagram-label" data-i18n="privacy.diagram1">✓ Lit uniquement : expéditeur + objet</div>
-                        <div class="diagram-row">
-                            <div class="diagram-box highlight">🔒 Extension</div>
-                            <div class="diagram-arrow">→</div>
-                            <div class="diagram-box">🧠 IA Scoring</div>
-                        </div>
-                        <div class="diagram-label" data-i18n="privacy.diagram2">✓ Envoie : "Jean Dupont" + "Facture urgente"</div>
-                        <div class="diagram-row">
-                            <div class="diagram-box">🧠 IA Scoring</div>
-                            <div class="diagram-arrow">→</div>
-                            <div class="diagram-box highlight">🔴🟡🟢</div>
-                        </div>
-                        <div class="diagram-label" data-i18n="privacy.diagram3">✓ Retourne uniquement le score d'urgence</div>
-                    </div>
-                </div>
-            </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"J'ai réduit mon temps email de 40%. L'intégration Gmail est transparente, on oublie que c'est une extension."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#ff5c8a;">A</div>
+          <div class="testimonial-author-info">
+            <h4>Amira Belkacem</h4>
+            <p>Product Manager — Scale-up</p>
+          </div>
         </div>
-    </section>
-
-    <!-- ======== PRICING ======== -->
-    <section class="section" id="pricing">
-        <div class="container">
-            <div class="pricing-header reveal">
-                <div class="section-label" data-i18n="pricing.label">Prix</div>
-                <h2 class="section-title">
-                    <span data-i18n="pricing.title">Simple et</span><br>
-                    <span class="gradient-text" data-i18n="pricing.title2">transparent.</span>
-                </h2>
-                <p class="section-subtitle" data-i18n="pricing.subtitle">Commence gratuitement. Passe à Pro quand tu veux.</p>
-            </div>
-            <div class="pricing-cards">
-                <div class="pricing-card reveal">
-                    <div class="pricing-name" data-i18n="pricing.free.name">Free</div>
-                    <div class="pricing-price">
-                        <span class="pricing-amount">0€</span>
-                    </div>
-                    <p class="pricing-desc" data-i18n="pricing.free.desc">Parfait pour tester MailMood et voir la différence.</p>
-                    <ul class="pricing-features">
-                        <li><span class="icon">✓</span> <span data-i18n="pricing.free.f1">20 emails scorés / jour</span></li>
-                        <li><span class="icon">✓</span> <span data-i18n="pricing.free.f2">Tri par urgence 🔴🟡🟢</span></li>
-                        <li><span class="icon">✓</span> <span data-i18n="pricing.free.f3">Fonctionne dans Gmail</span></li>
-                    </ul>
-                    <a href="#cta" class="btn btn-secondary" data-i18n="pricing.free.btn">Commencer gratuitement</a>
-                </div>
-                <div class="pricing-card featured reveal">
-                    <div class="pricing-badge" data-i18n="pricing.pro.badge">Populaire</div>
-                    <div class="pricing-name" data-i18n="pricing.pro.name">Pro</div>
-                    <div class="pricing-price">
-                        <span class="pricing-amount">3,99€</span>
-                        <span class="pricing-period" data-i18n="pricing.pro.period">/ mois</span>
-                    </div>
-                    <p class="pricing-desc" data-i18n="pricing.pro.desc">Emails illimités, réponses suggérées, résumés quotidiens.</p>
-                    <ul class="pricing-features">
-                        <li><span class="icon">✓</span> <span data-i18n="pricing.pro.f1">Emails illimités</span></li>
-                        <li><span class="icon">✓</span> <span data-i18n="pricing.pro.f2">Réponses suggérées par l'IA</span></li>
-                        <li><span class="icon">✓</span> <span data-i18n="pricing.pro.f3">Résumé quotidien intelligent</span></li>
-                        <li><span class="icon">✓</span> <span data-i18n="pricing.pro.f4">Support prioritaire</span></li>
-                    </ul>
-                    <a href="#cta" class="btn btn-primary" data-i18n="pricing.pro.btn">Rejoindre la bêta Pro</a>
-                </div>
-            </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============================================
+     FAQ
+     ============================================ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="faq-header reveal">
+      <span class="section-label">❓ FAQ</span>
+      <h2 class="section-title">Questions fréquentes</h2>
+      <p class="section-subtitle">Tout ce que tu veux savoir avant de rejoindre la bêta.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Est-ce que MailMood lit mes emails ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p><strong>Non, jamais.</strong> MailMood analyse uniquement les métadonnées : l'objet, l'expéditeur, l'heure d'envoi et la fréquence. Le contenu de tes emails n'est jamais lu, stocké ou transmis. Tout le traitement se fait localement dans ton navigateur.</p>
         </div>
-    </section>
-
-    <!-- ======== FAQ ======== -->
-    <section class="faq section" id="faq">
-        <div class="container">
-            <div class="faq-header reveal">
-                <div class="section-label">FAQ</div>
-                <h2 class="section-title" data-i18n="faq.title">Questions fréquentes</h2>
-            </div>
-            <div class="faq-list" id="faqList">
-                <!-- Filled by JS -->
-            </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Ça marche avec autre chose que Gmail ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Pour l'instant, MailMood est une extension Chrome optimisée pour Gmail. Le support Outlook et d'autres clients est prévu pour le Q3 2025.</p>
         </div>
-    </section>
-
-    <!-- ======== CTA ======== -->
-    <section class="cta-section section" id="cta">
-        <div class="container">
-            <div class="cta-box reveal">
-                <h2 class="section-title" data-i18n="cta.title">Prêt à retrouver<br><span class="gradient-text" data-i18n="cta.title2">le calme ?</span></h2>
-                <p class="section-subtitle" data-i18n="cta.subtitle">Rejoins la bêta privée et sois parmi les premiers à tester MailMood.</p>
-                <form class="cta-form" id="ctaForm">
-                    <input type="email" placeholder="ton@email.com" required id="emailInput">
-                    <button type="submit" class="btn btn-primary" data-i18n="cta.btn">S'inscrire</button>
-                </form>
-                <div class="form-success" id="formSuccess">
-                    <span data-i18n="cta.success">✓ Tu es sur la liste ! On te contacte très bientôt.</span>
-                </div>
-            </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          C'est vraiment gratuit ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Oui. Le plan Free reste gratuit pour toujours avec 50 emails triés par jour. Les plans Pro et Team offrent des fonctionnalités avancées pour ceux qui veulent aller plus loin.</p>
         </div>
-    </section>
-
-    <!-- ======== FOOTER ======== -->
-    <footer>
-        <div class="container">
-            <div class="footer-inner">
-                <div class="footer-left">© 2025 MailMood</div>
-                <div class="footer-links">
-                    <a href="privacy.html" data-i18n="footer.privacy">Politique de confidentialité</a>
-                    <a href="terms.html" data-i18n="footer.terms">CGU</a>
-                    <a href="legal.html" data-i18n="footer.legal">Mentions légales</a>
-                    <a href="mailto:contact@mailmood.app" data-i18n="footer.contact">Contact</a>
-                </div>
-            </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Comment fonctionne l'IA de tri ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Notre modèle analyse le contexte : qui envoie, quand, la formulation de l'objet, la fréquence de vos échanges avec cet expéditeur. Il attribue un score d'urgence et classe le mail automatiquement. Plus tu l'utilises, plus il devient précis.</p>
         </div>
-    </footer>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Mes données sont-elles en sécurité ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Absolument. Aucune donnée ne quitte ton navigateur. L'extension fonctionne en local. Nous ne collectons ni ne stockons aucune information personnelle. Conforme RGPD.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Je peux annuler à tout moment ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Oui, en un clic. Pas d'engagement, pas de frais cachés. Tu peux aussi désinstaller l'extension à tout moment et toutes les données locales sont supprimées instantanément.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- ============================================
-         JAVASCRIPT
-         ============================================ -->
-    <script>
-        // ============================================
-        // TRANSLATIONS
-        // ============================================
-        const translations = {
-            fr: {
-                "nav.demo": "Démo",
-                "nav.how": "Comment ça marche",
-                "nav.pricing": "Prix",
-                "nav.faq": "FAQ",
-                "nav.cta": "Rejoindre la bêta",
-                "hero.badge": "Bêta privée — Places limitées",
-                "hero.title1": "Ton email,",
-                "hero.title2": "enfin silencieux.",
-                "hero.subtitle": "MailMood trie ta boîte mail par urgence grâce à l'IA. Directement dans Gmail. Sans jamais lire tes emails.",
-                "hero.cta": "Rejoindre la bêta gratuite",
-                "hero.demo": "Voir la démo ↓",
-                "hero.note": "Gratuit · Extension Chrome · Aucun accès à tes emails",
-                "waitlist.before": "Déjà",
-                "waitlist.after": "inscrits sur la liste d'attente",
-                "demo.title": "📬 Boîte de réception",
-                "demo.all": "Tous",
-                "demo.urgent": "🔴 Urgent",
-                "demo.normal": "🟡 Normal",
-                "demo.low": "🟢 Peut attendre",
-                "problem.label": "Le constat",
-                "problem.title": "Le problème,",
-                "problem.title2": "en chiffres",
-                "problem.subtitle": "Ta boîte mail te vole plus de temps que tu ne le penses.",
-                "problem.stat1.num": "45 min",
-                "problem.stat1.label": "perdues chaque matin à trier tes emails",
-                "problem.stat2.num": "80%",
-                "problem.stat2.label": "de tes emails ne méritent pas ton attention immédiate",
-                "problem.stat3.num": "11 jours",
-                "problem.stat3.label": "par an gaspillés à gérer une boîte mail désorganisée",
-                "how.label": "Simple",
-                "how.title": "Comment ça",
-                "how.title2": "marche ?",
-                "how.subtitle": "3 étapes. Moins de 2 minutes. Zéro configuration.",
-                "how.step1.num": "Étape 1",
-                "how.step1.title": "Installe l'extension",
-                "how.step1.desc": "Un clic depuis le Chrome Web Store. Pas de compte à créer, pas de configuration complexe.",
-                "how.step2.num": "Étape 2",
-                "how.step2.title": "L'IA analyse tes emails",
-                "how.step2.desc": "MailMood lit uniquement l'expéditeur et l'objet pour scorer chaque email par urgence. Jamais le contenu.",
-                "how.step3.num": "Étape 3",
-                "how.step3.title": "Tu vois ce qui compte",
-                "how.step3.desc": "🔴 Urgent · 🟡 Normal · 🟢 Peut attendre — directement dans Gmail. Tu gagnes 30 minutes chaque matin.",
-                "privacy.label": "Vie privée",
-                "privacy.title": "Tes emails restent",
-                "privacy.title2": "tes emails.",
-                "privacy.subtitle": "On ne lit jamais le contenu de tes messages. Voici exactement ce que MailMood voit.",
-                "privacy.item1": "Seuls l'expéditeur et l'objet sont analysés",
-                "privacy.item2": "Aucun contenu d'email n'est lu ni stocké",
-                "privacy.item3": "Données traitées en temps réel, jamais conservées",
-                "privacy.item4": "Conforme RGPD — suppression en 1 clic",
-                "privacy.item5": "Code de l'extension auditable",
-                "privacy.diagram1": "✓ Lit uniquement : expéditeur + objet",
-                "privacy.diagram2": "✓ Envoie : \"Jean Dupont\" + \"Facture urgente\"",
-                "privacy.diagram3": "✓ Retourne uniquement le score d'urgence",
-                "pricing.label": "Prix",
-                "pricing.title": "Simple et",
-                "pricing.title2": "transparent.",
-                "pricing.subtitle": "Commence gratuitement. Passe à Pro quand tu veux.",
-                "pricing.free.name": "Free",
-                "pricing.free.desc": "Parfait pour tester MailMood et voir la différence.",
-                "pricing.free.f1": "20 emails scorés / jour",
-                "pricing.free.f2": "Tri par urgence 🔴🟡🟢",
-                "pricing.free.f3": "Fonctionne dans Gmail",
-                "pricing.free.btn": "Commencer gratuitement",
-                "pricing.pro.badge": "Populaire",
-                "pricing.pro.name": "Pro",
-                "pricing.pro.period": "/ mois",
-                "pricing.pro.desc": "Emails illimités, réponses suggérées, résumés quotidiens.",
-                "pricing.pro.f1": "Emails illimités",
-                "pricing.pro.f2": "Réponses suggérées par l'IA",
-                "pricing.pro.f3": "Résumé quotidien intelligent",
-                "pricing.pro.f4": "Support prioritaire",
-                "pricing.pro.btn": "Rejoindre la bêta Pro",
-                "faq.title": "Questions fréquentes",
-                "cta.title": "Prêt à retrouver",
-                "cta.title2": "le calme ?",
-                "cta.subtitle": "Rejoins la bêta privée et sois parmi les premiers à tester MailMood.",
-                "cta.btn": "S'inscrire",
-                "cta.success": "✓ Tu es sur la liste ! On te contacte très bientôt.",
-                "footer.privacy": "Politique de confidentialité",
-                "footer.terms": "CGU",
-                "footer.legal": "Mentions légales",
-                "footer.contact": "Contact"
-            },
-            en: {
-                "nav.demo": "Demo",
-                "nav.how": "How it works",
-                "nav.pricing": "Pricing",
-                "nav.faq": "FAQ",
-                "nav.cta": "Join the beta",
-                "hero.badge": "Private beta — Limited spots",
-                "hero.title1": "Your email,",
-                "hero.title2": "finally quiet.",
-                "hero.subtitle": "MailMood sorts your inbox by urgency with AI. Right inside Gmail. Without ever reading your emails.",
-                "hero.cta": "Join the free beta",
-                "hero.demo": "See the demo ↓",
-                "hero.note": "Free · Chrome Extension · No access to your emails",
-                "waitlist.before": "Already",
-                "waitlist.after": "on the waitlist",
-                "demo.title": "📬 Inbox",
-                "demo.all": "All",
-                "demo.urgent": "🔴 Urgent",
-                "demo.normal": "🟡 Normal",
-                "demo.low": "🟢 Can wait",
-                "problem.label": "The problem",
-                "problem.title": "The problem,",
-                
+<!-- ============================================
+     CTA FINAL
+     ============================================ -->
+<section class="cta">
+  <div class="container">
+    <div class="cta-box reveal">
+      <h2>Prêt à reprendre le contrôle<br>de ta boîte mail ?</h2>
+      <p>Rejoins les 847+ personnes qui ont déjà choisi le calme. Gratuit, sans engagement, sans accès à tes emails.</p>
+      <button class="btn-primary" onclick="openModal()">Rejoindre la bêta gratuite →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <div class="nav-logo-icon">📧</div>
+        MailMood
+      </div>
+      <ul class="footer-links">
+        <li><a href="#demo">Démo</a></li>
+        <li><a href="#how">Comment ça marche</a></li>
+        <li><a href="#pricing">Prix</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#" onclick="event.preventDefault(); alert('Page à venir')">Mentions légales</a></li>
+        <li><a href="#" onclick="event.preventDefault(); alert('Page à venir')">Confidentialité</a></li>
+      </ul>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 MailMood. Tous droits réservés. Fait avec 🧠 et du café à Paris.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================
+     MODAL WAITLIST
+     ============================================ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-form" id="modalForm">
+      <h3>🚀 Rejoins la bêta</h3>
+      <p>Laisse ton email et tu seras parmi les premiers à tester MailMood gratuitement.</p>
+      <input type="email" class="modal-input" id="emailInput" placeholder="ton@email.com" autocomplete="email">
+      <button class="btn-primary" onclick="submitEmail()">Rejoindre la liste d'attente</button>
+      <button class="modal-close" onclick="closeModalForce()">Non merci, peut-être plus tard</button>
+    </div>
+    <div class="modal-success" id="modalSuccess">
+      <div class="checkmark">🎉</div>
+      <h3>Tu es sur la liste !</h3>
+      <p>On t'envoie un email de confirmation très bientôt. Surveille ta boîte (pour la dernière fois sans tri 😉).</p>
+      <button class="btn-secondary" onclick="closeModalForce()" style="margin-top:20px;">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     JAVASCRIPT
+     ============================================ -->
+<script>
+/* ============================================
+   NAVBAR
+   ============================================ */
+const navbar = document.querySelector('.navbar');
+let lastScroll = 0;
+
+window.addEventListener('scroll', () => {
+  const currentScroll = window.scrollY;
+  if (currentScroll > 50) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+  lastScroll = currentScroll;
+});
+
+/* ============================================
+   MOBILE MENU
+   ============================================ */
+const mobileToggle = document.getElementById('mobileToggle');
+const navLinks = document.querySelector('.nav-links');
+
+if (mobileToggle) {
+  mobileToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('mobile-open');
+    mobileToggle.textContent = navLinks.classList.contains('mobile-open') ? '✕' : '☰';
+  });
+}
+
+/* ============================================
+   SCROLL REVEAL
+   ============================================ */
+const revealElements = document.querySelectorAll('.reveal');
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+revealElements.forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = `opacity 0.6s ease ${i * 0.05}s, transform 0.6s ease ${i * 0.05}s`;
+  revealObserver.observe(el);
+});
+
+/* ============================================
+   DEMO ANIMATION
+   ============================================ */
+const demoEmails = document.querySelectorAll('.demo-email');
+let demoAnimated = false;
+
+const demoObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !demoAnimated) {
+      demoAnimated = true;
+      demoEmails.forEach((email, i) => {
+        const delay = parseInt(email.dataset.delay) || i * 300;
+        setTimeout(() => {
+          email.style.opacity = '1';
+          email.style.transform = 'translateX(0)';
+        }, delay);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+
+demoEmails.forEach(email => {
+  email.style.opacity = '0';
+  email.style.transform = 'translateX(-30px)';
+  email.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+});
+
+const demoContainer = document.querySelector('.demo-container');
+if (demoContainer) demoObserver.observe(demoContainer);
+
+/* ============================================
+   COUNTER ANIMATION
+   ============================================ */
+const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseInt(el.dataset.target);
+      const duration = 2000;
+      const start = performance.now();
+
+      function updateCount(currentTime) {
+        const elapsed = currentTime - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(eased * target);
+        el.textContent = current;
+        if (progress < 1) {
+          requestAnimationFrame(updateCount);
+        }
+      }
+
+      requestAnimationFrame(updateCount);
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+
+statNumbers.forEach(el => counterObserver.observe(el));
+
+/* ============================================
+   WAITLIST COUNT ANIMATION
+   ============================================ */
+const waitlistEl = document.getElementById('waitlistCount');
+if (waitlistEl) {
+  let base = 847;
+  setInterval(() => {
+    if (Math.random() > 0.6) {
+      base += Math.floor(Math.random() * 3) + 1;
+      waitlistEl.textContent = base.toLocaleString();
+      waitlistEl.style.transform = 'scale(1.1)';
+      setTimeout(() => { waitlistEl.style.transform = 'scale(1)'; }, 300);
+    }
+  }, 8000);
+}
+
+/* ============================================
+   FAQ TOGGLE
+   ============================================ */
+function toggleFaq(button) {
+  const item = button.parentElement;
+  const isActive = item.classList.contains('active');
+
+  document.querySelectorAll('.faq-item.active').forEach(i => {
+    i.classList.remove('active');
+  });
+
+  if (!isActive) {
+    item.classList.add('active');
+  }
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+const modalOverlay = document.getElementById('modalOverlay');
+const modalForm = document.getElementById('modalForm');
+const modalSuccess = document.getElementById('modalSuccess');
+const emailInput = document.getElementById('emailInput');
+
+function openModal() {
+  modalOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => emailInput.focus(), 400);
+}
+
+function closeModal(event) {
+  if (event.target === modalOverlay) {
+    closeModalForce();
+  }
+}
+
+function closeModalForce() {
+  modalOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+  setTimeout(() => {
+    modalForm.style.display = 'block';
+    modalSuccess.classList.remove('show');
+    emailInput.value = '';
+  }, 300);
+}
+
+function submitEmail() {
+  const email = emailInput.value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(email)) {
+    emailInput.style.borderColor = '#ff5c5c';
+    emailInput.style.animation = 'shake 0.4s ease';
+    setTimeout(() => {
+      emailInput.style.borderColor = 'var(--border)';
+      emailInput.style.animation = '';
+    }, 1000);
+    return;
+  }
+
+  // Ici tu brancheras ton backend (Mailchimp, Supabase, etc.)
+  console.log('Email inscrit:', email);
+
+  modalForm.style.display = 'none';
+  modalSuccess.classList.add('show');
+
+  // Update compteur
+  const countEl = document.getElementById('waitlistCount');
+  if (countEl) {
+    const current = parseInt(countEl.textContent.replace(/\D/g, ''));
+    countEl.textContent = (current + 1).toLocaleString();
+  }
+}
+
+// Fermer modal avec Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModalForce();
+});
+
+/* ============================================
+   LANGUAGE TOGGLE (FR/EN)
+   ============================================ */
+const langToggle = document.getElementById('langToggle');
+let isEN = false;
+
+const translations = {
+  en: {
+    heroTitle: 'Your email,<br><span class="gradient-text">finally silent.</span>',
+    heroSubtitle: 'MailMood sorts your inbox by urgency using AI. Directly in Gmail. Without ever reading your emails.',
+    heroCTA: 'Join the free beta',
+    heroDemo: 'See the demo ↓',
+    heroTrust: 'Free · Chrome Extension · No access to your emails',
+    heroBadge: 'Private beta — Limited spots',
+    heroSocial: 'Already <strong>{count}</strong> on the waitlist',
+    demoLabel: '⚡ Live demo',
+    demoTitle: 'Watch MailMood in action',
+    demoSubtitle: 'The AI analyzes context, tone and sender to classify each email automatically.',
+    howLabel: '🔧 How it works',
+    howTitle: '3 steps. 30 seconds.',
+    howSubtitle: 'No complex setup. No account to create. Just a Chrome extension.',
+    howStep1Title: 'Install the extension',
+    howStep1Desc: 'One click from the Chrome Web Store. No signup required for the beta.',
+    howStep2Title: 'AI analyzes your mail',
+    howStep2Desc: 'MailMood reads metadata (subject, sender, time) and sorts by urgency. Without ever accessing the content.',
+    howStep3Title: 'Your inbox is sorted',
+    howStep3Desc: 'Priority badges appear directly in Gmail. You know what to read first.',
+    featuresLabel: '🎯 Why MailMood',
+    featuresTitle: 'Designed for your peace of mind',
+    featuresSubtitle: 'Every feature is built to reduce your mental load.',
+    feat1Title: '100% private',
+    feat1Desc: 'Your emails stay with you. The AI only analyzes metadata — never the content of your messages.',
+    feat2Title: 'Instant',
+    feat2Desc: 'Sorting happens in real-time as soon as a new email arrives. No delay, no perceptible latency.',
+    feat3Title: 'AI that learns',
+    feat3Desc: 'The more you use MailMood, the more precise the sorting becomes. The algorithm adapts to your habits.',
+    feat4Title: 'Built into Gmail',
+    feat4Desc: 'No new app to open. Priority badges appear directly in your existing Gmail interface.',
+    stat1: 'min saved / day',
+    stat2: '% sorting accuracy',
+    stat3: 'beta testers signed up',
+    stat4: 'email read by AI',
+    pricingLabel: '💎 Pricing',
+    pricingTitle: 'Simple and transparent',
+    pricingSubtitle: 'Start free. Upgrade when you want.',
+    pricingFree: 'Free',
+    pricingFreeCTA: 'Start free',
+    pricingFreeDesc: 'To discover MailMood',
+    pricingFreeF1: '50 emails sorted / day',
+    pricingFreeF2: '3 priority levels',
+    pricingFreeF3: 'Badge in Gmail',
+    pricingPro: 'Pro',
+    pricingProCTA: 'Join the Pro beta',
+    pricingProDesc: 'For email power users',
+    pricingProF1: 'Unlimited emails',
+    pricingProF2: '5 priority levels',
+    pricingProF3: 'Personalized AI',
+    pricingProF4: 'Daily summary',
+    pricingProF5: 'Priority support',
+    pricingTeam: 'Team',
+    pricingTeamCTA: 'Contact us',
+    pricingTeamDesc: 'For teams',
+    pricingTeamF1: 'Everything in Pro',
+    pricingTeamF2: 'Team dashboard',
+    pricingTeamF3: 'Shared rules',
+    pricingTeamF4: 'Admin panel',
+    testimonialsLabel: '💬 Testimonials',
+    testimonialsTitle: 'They tested the beta',
+    testimonialsSubtitle: 'Feedback from our first users.',
+    test1Text: '"I was getting 120 emails a day. Now I know which ones to read first in 2 seconds. Game changer."',
+    test1Name: 'Sophie Martin',
+    test1Role: 'Head of Ops — SaaS Startup',
+    test2Text: '"The fact that the AI doesn\'t read my emails is what convinced me. Finally a tool that respects my privacy."',
+    test2Name: 'Lucas Renard',
+    test2Role: 'Lawyer — Independent firm',
+    test3Text: '"I reduced my email time by 40%. The Gmail integration is seamless, you forget it\'s an extension."',
+    test3Name: 'Amira Belkacem',
+    test3Role: 'Product Manager — Scale-up',
+    faqLabel: '❓ FAQ',
+    faqTitle: 'Frequently asked questions',
+    faqSubtitle: 'Everything you need to know before joining the beta.',
+    faq1Q: 'Does MailMood read my emails?',
+    faq1A: '<strong>No, never.</strong> MailMood only analyzes metadata: subject, sender, send time and frequency. Your email content is never read, stored or transmitted. All processing happens locally in your browser.',
+    faq2Q: 'Does it work with anything other than Gmail?',
+    faq2A: 'For now, MailMood is a Chrome extension optimized for Gmail. Outlook and other client support is planned for Q3 2025.',
+    faq3Q: 'Is it really free?',
+    faq3A: 'Yes. The Free plan stays free forever with 50 emails sorted per day. Pro and Team plans offer advanced features for those who want more.',
+    faq4Q: 'How does the sorting AI work?',
+    faq4A: 'Our model analyzes context: who sends, when, the subject wording, the frequency of your exchanges with that sender. It assigns an urgency score and classifies the mail automatically. The more you use it, the more precise it gets.',
+    faq5Q: 'Is my data safe?',
+    faq5A: 'Absolutely. No data leaves your browser. The extension works locally. We don\'t collect or store any personal information. GDPR compliant.',
+    faq6Q: 'Can I cancel anytime?',
+    faq6A: 'Yes, in one click. No commitment, no hidden fees. You can also uninstall the extension at any time and all local data is instantly deleted.',
+    ctaTitle: 'Ready to take back control<br>of your inbox?',
+    ctaDesc: 'Join the 847+ people who already chose calm. Free, no commitment, no access to your emails.',
+    ctaCTA: 'Join the free beta →',
+    modalTitle: '🚀 Join the beta',
+    modalDesc: 'Leave your email and you\'ll be among the first to test MailMood for free.',
+    modalCTA: 'Join the waitlist',
+    modalClose: 'No thanks, maybe later',
+    modalSuccessTitle: 'You\'re on the list!',
+    modalSuccessDesc: 'We\'ll send you a confirmation email very soon. Watch your inbox (for the last time without sorting 😉).',
+    navDemo: 'Demo',
+    navHow: 'How it works',
+    navPricing: 'Pricing',
+    navFaq: 'FAQ',
+    navCTA: 'Join the beta',
+    footerLegal: 'Legal',
+    footerPrivacy: 'Privacy',
+    footerCopy: '© 2025 MailMood. All rights reserved. Made with 🧠 and coffee in Paris.',
+    langBtn: 'FR'
+  }
+};
+
+const originalFR = {};
+
+function cacheFR() {
+  originalFR.heroTitle = document.querySelector('.hero h1').innerHTML;
+  originalFR.heroSubtitle = document.querySelector('.hero-subtitle').textContent;
+  originalFR.heroBadge = document.querySelector('.hero-badge').innerHTML;
+  originalFR.langBtn = 'EN';
+}
+
+cacheFR();
+
+if (langToggle) {
+  langToggle.addEventListener('click', () => {
+    isEN = !isEN;
+    const t = isEN ? translations.en : null;
+
+    if (isEN) {
+      langToggle.textContent = t.langBtn;
+      document.querySelector('.hero h1').innerHTML = t.heroTitle;
+      document.querySelector('.hero-subtitle').textContent = t.heroSubtitle;
+      document.querySelector('.hero-badge').innerHTML = '<span class="hero-badge-dot"></span>' + t.heroBadge;
+      document.querySelector('.hero-buttons .btn-primary').textContent = t.heroCTA;
+      document.querySelector('.hero-buttons .btn-secondary').textContent = t.heroDemo;
+      document.querySelector('.hero-trust').textContent = t.heroTrust;
+
+      // Demo
+      document.querySelectorAll('.demo .section-label')[0].textContent = t.demoLabel;
+      document.querySelector('.demo .section-title').textContent = t.demoTitle;
+      document.querySelector('.demo .section-subtitle').textContent = t.demoSubtitle;
+
+      // How
+      document.querySelectorAll('.how .section-label')[0].textContent = t.howLabel;
+      document.querySelector('.how .section-title').textContent = t.howTitle;
+      document.querySelector('.how .section-subtitle').textContent = t.howSubtitle;
+      const steps = document.querySelectorAll('.how-step');
+      steps[0].querySelector('h3').textContent = t.howStep1Title;
+      steps[0].querySelector('p').textContent = t.howStep1Desc;
+      steps[1].querySelector('h3').textContent = t.howStep2Title;
+      steps[1].querySelector('p').textContent = t.howStep2Desc;
+      steps[2].querySelector('h3').textContent = t.howStep3Title;
+      steps[2].querySelector('p').textContent = t.howStep3Desc;
+
+      // Features
+      document.querySelectorAll('.features .section-label')[0].textContent = t.featuresLabel;
+      document.querySelector('.features .section-title').textContent = t.featuresTitle;
+      document.querySelector('.features .section-subtitle').textContent = t.featuresSubtitle;
+      const feats = document.querySelectorAll('.feature-card');
+      feats[0].querySelector('h3').textContent = t.feat1Title;
+      feats[0].querySelector('p').textContent = t.feat1Desc;
+      feats[1].querySelector('h3').textContent = t.feat2Title;
+      feats[1].querySelector('p').textContent = t.feat2Desc;
+      feats[2].querySelector('h3').textContent = t.feat3Title;
+      feats[2].querySelector('p').textContent = t.feat3Desc;
+      feats[3].querySelector('h3').textContent = t.feat4Title;
+      feats[3].querySelector('p').textContent = t.feat4Desc;
+
+      // Stats
+      const statLabels = document.querySelectorAll('.stat-label');
+      statLabels[0].textContent = t.stat1;
+      statLabels[1].textContent = t.stat2;
+      statLabels[2].textContent = t.stat3;
+      statLabels[3].textContent = t.stat4;
+
+      // Pricing
+      document.querySelectorAll('.pricing .section-label')[0].textContent = t.pricingLabel;
+      document.querySelector('.pricing .section-title').textContent = t.pricingTitle;
+      document.querySelector('.pricing .section-subtitle').textContent = t.pricingSubtitle;
+      const cards = document.querySelectorAll('.pricing-card');
+      cards[0].querySelector('.pricing-name').textContent = t.pricingFree;
+      cards[0].querySelector('.pricing-desc').textContent = t.pricingFreeDesc;
+      cards[0].querySelector('button').textContent = t.pricingFreeCTA;
+      const freeFeats = cards[0].querySelectorAll('.pricing-features li');
+      freeFeats[0].innerHTML = '✓ ' + t.pricingFreeF1;
+      freeFeats[1].innerHTML = '✓ ' + t.pricingFreeF2;
+      freeFeats[2].innerHTML = '✓ ' + t.pricingFreeF3;
+      cards[1].querySelector('.pricing-name').textContent = t.pricingPro;
+      cards[1].querySelector('.pricing-desc').textContent = t.pricingProDesc;
+      cards[1].querySelector('button').textContent = t.pricingProCTA;
+      const proFeats = cards[1].querySelectorAll('.pricing-features li');
+      proFeats[0].innerHTML = '✓ ' + t.pricingProF1;
+      proFeats[1].innerHTML = '✓ ' + t.pricingProF2;
+      proFeats[2].innerHTML = '✓ ' + t.pricingProF3;
+      proFeats[3].innerHTML = '✓ ' + t.pricingProF4;
+      proFeats[4].innerHTML = '✓ ' + t.pricingProF5;
+      cards[2].querySelector('.pricing-name').textContent = t.pricingTeam;
+      cards[2].querySelector('.pricing-desc').textContent = t.pricingTeamDesc;
+      cards[2].querySelector('button').textContent = t.pricingTeamCTA;
+      const teamFeats = cards[2].querySelectorAll('.pricing-features li');
+      teamFeats[0].innerHTML = '✓ ' + t.pricingTeamF1;
+      teamFeats[1].innerHTML = '✓ ' + t.pricingTeamF2;
+      teamFeats[2].innerHTML = '✓ ' + t.pricingTeamF3;
+      teamFeats[3].innerHTML = '✓ ' + t.pricingTeamF4;
+
+      // Testimonials
+      document.querySelectorAll('.testimonials .section-label')[0].textContent = t.testimonialsLabel;
+      document.querySelector('.testimonials .section-title').textContent = t.testimonialsTitle;
+      document.querySelector('.testimonials .section-subtitle').textContent = t.testimonialsSubtitle;
+      const tests = document.querySelectorAll('.testimonial-card');
+      tests[0].querySelector('.testimonial-text').textContent = t.test1Text;
+      tests[1].querySelector('.testimonial-text').textContent = t.test2Text;
+      tests[2].querySelector('.testimonial-text').textContent = t.test3Text;
+
+      // FAQ
+      document.querySelectorAll('.faq .section-label')[0].textContent = t.faqLabel;
+      document.querySelector('.faq .section-title').textContent = t.faqTitle;
+      document.querySelector('.faq .section-subtitle').textContent = t.faqSubtitle;
+      const faqItems = document.querySelectorAll('.faq-item');
+      const faqQs = ['faq1Q','faq2Q','faq3Q','faq4Q','faq5Q','faq6Q'];
+      const faqAs = ['faq1A','faq2A','faq3A','faq4A','faq5A','faq6A'];
+      faqItems.forEach((item, i) => {
+        if (faqQs[i]) {
+          item.querySelector('.faq-question').firstChild.textContent = t[faqQs[i]] + ' ';
+          item.querySelector('.faq-answer p').innerHTML = t[faqAs[i]];
+        }
+      });
+
+      // CTA
+      document.querySelector('.cta-box h2').innerHTML = t.ctaTitle;
+      document.querySelector('.cta-box p').innerHTML = t.ctaDesc;
+      document.querySelector('.cta-box .btn-primary').textContent = t.ctaCTA;
+
+      // Modal
+      document.querySelector('#modalForm h3').textContent = t.modalTitle;
+      document.querySelector('#modalForm p').textContent = t.modalDesc;
+      document.querySelector('#modalForm .btn-primary').textContent = t.modalCTA;
+      document.querySelector('.modal-close').textContent = t.modalClose;
+      document.querySelector('#modalSuccess h3').textContent = t.modalSuccessTitle;
+      document.querySelector('#modalSuccess p').textContent = t.modalSuccessDesc;
+
+      // Nav
+      const navItems = document.querySelectorAll('.nav-links a');
+      navItems[0].textContent = t.navDemo;
+      navItems[1].textContent = t.navHow;
+      navItems[2].textContent = t.navPricing;
+      navItems[3].textContent = t.navFaq;
+      document.querySelector('.nav-right .btn-primary').textContent = t.navCTA;
+
+      // Footer
+      const footerLinks = document.querySelectorAll('.footer-links a');
+      footerLinks[0].textContent = t.navDemo;
+      footerLinks[1].textContent = t.navHow;
+      footerLinks[2].textContent = t.navPricing;
+      footerLinks[3].textContent = t.navFaq;
+      footerLinks[4].textContent = t.footerLegal;
+      footerLinks[5].textContent = t.footerPrivacy;
+      document.querySelector('.footer-bottom p').textContent = t.footerCopy;
+
+    } else {
+      // Revert to FR — reload is simplest
+      location.reload();
+    }
+  });
+}
+
+/* ============================================
+   SHAKE ANIMATION
+   ============================================ */
+const style = document.createElement('style');
+style.textContent = `
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+/* ============================================
+   NAVBAR STYLES (included here because part 1 was cut)
+   ============================================ */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 16px 0;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+.navbar.scrolled {
+  background: rgba(10, 10, 15, 0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+
+.navbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+
+.nav-logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--primary);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 36px;
+}
+
+.nav-links a {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover { color: var(--text); }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-lang {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-lang:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px var(--primary-glow);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--primary-glow);
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.mobile-toggle {
+  display: none;
+  background: none;
+  color: var(--text);
+  font-size: 1.5rem;
+}
+
+/* ============================================
+   HERO STYLES
+   ============================================ */
+.hero {
+  padding: 160px 0 100px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse, var(--primary-glow) 0%, transparent 60%);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+
+.hero-badge-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 2s infinite;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 24px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradientMove 4s ease infinite;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--text-muted);
+  max-width: 560px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+}
+
+.hero-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.hero-trust {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+}
+
+.hero-social-proof {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+}
+
+.hero-social-proof p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.hero-social-proof strong {
+  color: var(--text);
+  transition: transform 0.3s;
+  display: inline-block;
+}
+
+.avatar-stack {
+  display: flex;
+}
+
+.avatar-stack span {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  margin-right: -8px;
+  border: 2px solid var(--bg);
+}
+
+.avatar-stack span:nth-child(1) { background: #7c5cff; }
+.avatar-stack span:nth-child(2) { background: #00d4aa; }
+.avatar-stack span:nth-child(3) { background: #ff5c8a; }
+.avatar-stack span:nth-child(4) { background: #ffa64c; }
+
+/* ============================================
+   SECTION LABELS
+   ============================================ */
+.section-label {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.section-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 520px;
+  line-height: 1.7;
+}
+
+/* ============================================
+   DEMO SECTION
+   ============================================ */
+.demo {
+  padding: 100px 0;
+  text-align: center;
+}
+
+.demo-container {
+  max-width: 720px;
+  margin: 48px auto 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.demo-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.demo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+}
+
+.demo-dot:first-child { background: #ff5f57; }
+.demo-dot:nth-child(2) { background: #ffbd2e; }
+.demo-dot:nth-child(3) { background: #28c940; }
+
+.demo-content {
+  padding: 8px;
+}
+
+.demo-email-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.demo-email {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s;
+}
+
+.demo-email:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.demo-email-priority {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: center;
+}
+
+.priority-urgent { background: rgba(255,70,70,0.15); color: #ff5c5c; }
+.priority-medium { background: rgba(255,180,0,0.15); color: #ffb400; }
+.priority-low { background: rgba(0,212,170,0.15); color: #00d4aa; }
+.priority-spam { background: rgba(136,136,160,0.1); color: #8888a0; }
+
+.demo-email-info {
+  flex: 1;
+  text-align: left;
+}
+
+.demo-email-sender {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.demo-email-subject {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.demo-email-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ============================================
+   HOW IT WORKS
+   ============================================ */
+.how {
+  padding: 100px 0;
+}
+
+.how-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.how-header .section-subtitle {
+  margin: 0 auto;
+}
+
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.how-step {
+  text-align: center;
+  padding: 40px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.how-step:hover {
+  border-color: rgba(124,92,255,0.3);
+  transform: translateY(-4px);
+}
+
+.how-step-number {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.how-step-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.how-step h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.how-step p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ============================================
+   FEATURES
+   ============================================ */
+.features {
+  padding: 100px 0;
+}
+
+.features-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.features-header .section-subtitle {
+  margin: 0 auto;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  padding: 40px 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.4s ease;
+}
+
+.feature-card:hover {
+  border-color: rgba(124,92,255,0.3);
+  transform: translateY(-4px);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.feature-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ============================================
+   STATS
+   ============================================ */
+.stats {
+  padding: 60px 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.nav-links.mobile-open {
+  display: flex !important;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  background: rgba(10,10,15,0.98);
+  flex-direction: column;
+  padding: 24px;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+  z-index: 999;
+}
+`;
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>
