@@ -1,6 +1,6 @@
 /* ================================
    MAILMOOD — app.js
-   PARTIE 3/4 — JavaScript complet
+   VERSION CORRIGÉE
    ================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -37,10 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function applyLang(lang) {
         document.querySelectorAll('[data-fr]').forEach(el => {
+            const value = el.getAttribute(`data-${lang}`) || el.getAttribute('data-fr');
             if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                el.placeholder = el.getAttribute(`data-${lang}`) || el.getAttribute('data-fr');
+                el.placeholder = value;
+            } else if (value.includes('<')) {
+                el.innerHTML = value;
             } else {
-                el.textContent = el.getAttribute(`data-${lang}`) || el.getAttribute('data-fr');
+                el.textContent = value;
             }
         });
         if (langToggle) langToggle.textContent = lang === 'fr' ? 'EN' : 'FR';
@@ -81,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ========== NAVBAR SCROLL ==========
     const navbar = document.getElementById('navbar');
-    let lastScroll = 0;
 
     window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
@@ -90,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             navbar.style.boxShadow = 'none';
         }
-        lastScroll = scrollY;
     }, { passive: true });
 
     // ========== REVEAL ON SCROLL ==========
@@ -103,133 +104,105 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.1 });
 
     reveals.forEach(el => revealObserver.observe(el));
 
     // ========== DEMO INTERACTIVE ==========
-    const emails = document.querySelectorAll('.demo-email');
-    const views = document.querySelectorAll('.detail-view');
-    const detailEmpty = document.querySelector('.detail-empty');
-    const demoSplit = document.querySelector('.demo-split');
-    const demoBack = document.querySelector('.demo-back');
-    const isMobile = () => window.innerWidth <= 768;
+    const emailItems = document.querySelectorAll('.email-item');
+    const detailPanel = document.querySelector('.demo-detail');
+    const detailCards = document.querySelectorAll('.detail-card');
+    const backBtn = document.querySelector('.back-btn');
 
-    // Reply data
-    const replies = {
-        fr: {
-            1: "Bonjour Marc,\n\nMerci pour votre message. Je suis disponible demain entre 14h et 17h pour organiser cet appel.\n\nN'hésitez pas à me proposer un créneau qui vous convient.\n\nCordialement,\n[Votre nom]",
-            2: "Bonjour Léa,\n\nMerci pour l'envoi du brief. Je vais le consulter dans la journée et vous ferai un retour détaillé d'ici demain matin.\n\nBonne journée,\n[Votre nom]",
-            3: "Bonjour Julien,\n\nJe prends note de cette deadline. La V2 sera prête pour vendredi soir au plus tard.\n\nJe vous tiens informé de l'avancement.\n\nCordialement,\n[Votre nom]",
-            4: null,
-            5: null,
-            6: null
-        },
-        en: {
-            1: "Hi Marc,\n\nThank you for your message. I'm available tomorrow between 2pm and 5pm to schedule this call.\n\nFeel free to suggest a time that works for you.\n\nBest regards,\n[Your name]",
-            2: "Hi Léa,\n\nThank you for sending the brief. I'll review it today and send you detailed feedback by tomorrow morning.\n\nBest,\n[Your name]",
-            3: "Hi Julien,\n\nNoted regarding the deadline. V2 will be ready by Friday evening at the latest.\n\nI'll keep you posted on progress.\n\nBest regards,\n[Your name]",
-            4: null,
-            5: null,
-            6: null
-        }
-    };
+    function isMobile() {
+        return window.innerWidth < 768;
+    }
 
     function selectEmail(id) {
-        // Update active state
-        emails.forEach(e => e.classList.remove('active'));
-        const activeEmail = document.querySelector(`.demo-email[data-id="${id}"]`);
-        if (activeEmail) activeEmail.classList.add('active');
+        // Highlight email dans la liste
+        emailItems.forEach(item => item.classList.remove('active'));
+        const activeItem = document.querySelector(`.email-item[data-id="${id}"]`);
+        if (activeItem) activeItem.classList.add('active');
 
-        // Show detail
-        views.forEach(v => v.classList.remove('active'));
-        const activeView = document.querySelector(`.detail-view[data-view="${id}"]`);
-        if (activeView) activeView.classList.add('active');
-        if (detailEmpty) detailEmpty.style.display = 'none';
+        // Afficher le bon detail card
+        detailCards.forEach(card => {
+            card.classList.remove('active');
+            card.style.display = 'none';
+        });
+        const activeCard = document.querySelector(`.detail-card[data-id="${id}"]`);
+        if (activeCard) {
+            activeCard.style.display = 'block';
+            setTimeout(() => activeCard.classList.add('active'), 10);
+        }
 
-        // Mobile: show detail panel
-        if (isMobile() && demoSplit) {
-            demoSplit.classList.add('detail-open');
+        // Sur mobile, afficher le panneau détail
+        if (isMobile() && detailPanel) {
+            detailPanel.classList.add('mobile-open');
+        }
+
+        // Effet typing sur le résumé IA
+        if (activeCard) {
+            const typingEl = activeCard.querySelector('.ai-summary');
+            if (typingEl) {
+                const fullText = typingEl.getAttribute('data-full') || typingEl.textContent;
+                if (!typingEl.getAttribute('data-full')) {
+                    typingEl.setAttribute('data-full', typingEl.textContent);
+                }
+                typingEl.textContent = '';
+                let i = 0;
+                function typeChar() {
+                    if (i < fullText.length) {
+                        typingEl.textContent += fullText[i];
+                        i++;
+                        setTimeout(typeChar, 12);
+                    }
+                }
+                typeChar();
+            }
         }
     }
 
-    emails.forEach(email => {
-        email.addEventListener('click', () => {
-            selectEmail(email.dataset.id);
+    // Click sur chaque email
+    emailItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const id = item.getAttribute('data-id');
+            selectEmail(id);
         });
     });
 
-    // Back button (mobile)
-    if (demoBack) {
-        demoBack.addEventListener('click', () => {
-            if (demoSplit) demoSplit.classList.remove('detail-open');
-            emails.forEach(e => e.classList.remove('active'));
-            views.forEach(v => v.classList.remove('active'));
-            if (detailEmpty) detailEmpty.style.display = 'flex';
+    // Bouton retour mobile
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            if (detailPanel) detailPanel.classList.remove('mobile-open');
         });
     }
-
-    // Typing effect for replies
-    function typeReply(replyEl, text, speed = 18) {
-        let i = 0;
-        replyEl.textContent = '';
-        replyEl.classList.add('typing');
-        replyEl.style.display = 'block';
-
-        function type() {
-            if (i < text.length) {
-                replyEl.textContent += text.charAt(i);
-                i++;
-                setTimeout(type, speed);
-            } else {
-                replyEl.classList.remove('typing');
-            }
-        }
-        type();
-    }
-
-    // Reply buttons
-    document.querySelectorAll('.mm-btn').forEach(btn => {
-        if (btn.disabled) return;
-        btn.addEventListener('click', () => {
-            const id = btn.dataset.id;
-            const lang = html.getAttribute('data-lang') || 'fr';
-            const replyText = replies[lang]?.[id];
-            const replyEl = document.querySelector(`.mm-reply[data-reply="${id}"]`);
-
-            if (replyText && replyEl && !replyEl.textContent.trim()) {
-                btn.disabled = true;
-                btn.style.opacity = '0.5';
-                btn.textContent = lang === 'fr' ? '⏳ Génération...' : '⏳ Generating...';
-
-                setTimeout(() => {
-                    btn.textContent = lang === 'fr' ? '✅ Réponse générée' : '✅ Reply generated';
-                    typeReply(replyEl, replyText);
-                }, 800);
-            }
-        });
-    });
 
     // ========== FAQ ACCORDION ==========
-    document.querySelectorAll('.faq-q').forEach(q => {
-        q.addEventListener('click', () => {
-            const item = q.parentElement;
-            const isOpen = item.classList.contains('open');
+    const faqItems = document.querySelectorAll('.faq-item');
 
-            // Close all
-            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        if (question) {
+            question.addEventListener('click', () => {
+                const isOpen = item.classList.contains('open');
 
-            // Toggle current
-            if (!isOpen) item.classList.add('open');
-        });
+                // Fermer tous les autres
+                faqItems.forEach(other => other.classList.remove('open'));
+
+                // Toggle celui-ci
+                if (!isOpen) {
+                    item.classList.add('open');
+                }
+            });
+        }
     });
 
     // ========== SMOOTH SCROLL ==========
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const target = document.querySelector(this.getAttribute('href'));
+        anchor.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector(anchor.getAttribute('href'));
             if (target) {
-                e.preventDefault();
                 target.scrollIntoView({ behavior: 'smooth' });
             }
         });
@@ -256,7 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Trigger counters when pricing section visible
     const pricingSection = document.querySelector('.pricing');
     if (pricingSection) {
         const counterObserver = new IntersectionObserver((entries) => {
@@ -271,9 +243,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ========== AUTO SELECT FIRST EMAIL ON DESKTOP ==========
-    if (!isMobile() && emails.length > 0) {
+    if (!isMobile() && emailItems.length > 0) {
         setTimeout(() => selectEmail('1'), 600);
     }
+
     // ========== ACTIVE NAV LINK ON SCROLL ==========
     const sections = document.querySelectorAll('section[id]');
 
@@ -291,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (scrollY >= top && scrollY < top + height) {
                     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
                     link.classList.add('active');
-                }
+                } 
             }
             if (linkM) {
                 if (scrollY >= top && scrollY < top + height) {
