@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MailMood — Ta boîte mail. Sans le bruit.</title>
     <meta name="description" content="MailMood analyse tes emails en local avec l'IA. Tri intelligent, réponses automatiques, zéro bruit.">
+    <meta property="og:title" content="MailMood — Ta boîte mail. Sans le bruit.">
+    <meta property="og:description" content="MailMood analyse tes emails en local avec l'IA.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#6C5CE7">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +32,6 @@
         </div>
 
         <div class="nav-actions">
-            <!-- Theme Toggle -->
             <button class="theme-toggle" id="themeToggle" aria-label="Changer le thème">
                 <div class="toggle-track">
                     <div class="toggle-thumb">
@@ -37,46 +40,40 @@
                     </div>
                 </div>
             </button>
-
-            <!-- Lang Toggle -->
             <button class="lang-toggle" id="langToggle"><span>EN</span></button>
-
-            <!-- CTA -->
             <a href="#pricing" class="nav-cta" data-fr="Installer — Gratuit" data-en="Install — Free">Installer — Gratuit</a>
         </div>
 
-        <!-- Mobile burger -->
-        <button class="burger" id="burger" aria-label="Menu">
+        <button class="hamburger" id="hamburger" aria-label="Menu">
             <span></span><span></span><span></span>
         </button>
     </div>
-
-    <!-- Mobile overlay -->
-    <div class="mobile-nav" id="mobileNav">
-        <a href="#benefits" data-fr="Avantages" data-en="Benefits">Avantages</a>
-        <a href="#demo" data-fr="Démo" data-en="Demo">Démo</a>
-        <a href="#pricing" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
-        <a href="#faq" data-fr="FAQ" data-en="FAQ">FAQ</a>
-        <div class="mobile-actions">
-            <button class="theme-toggle-m" id="themeToggleM">🌙</button>
-            <button class="lang-toggle-m" id="langToggleM">EN</button>
-        </div>
-        <a href="#pricing" class="btn btn-primary" data-fr="Installer — Gratuit" data-en="Install — Free">Installer — Gratuit</a>
-    </div>
 </nav>
 
+<!-- ========== MOBILE NAV ========== -->
+<div class="mobile-nav" id="mobileNav">
+    <a href="#benefits" data-fr="Avantages" data-en="Benefits">Avantages</a>
+    <a href="#demo" data-fr="Démo" data-en="Demo">Démo</a>
+    <a href="#pricing" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
+    <a href="#faq" data-fr="FAQ" data-en="FAQ">FAQ</a>
+    <hr>
+    <button id="themeToggleM">☀️ Light</button>
+    <button id="langToggleM">🇬🇧 EN</button>
+    <a href="#pricing" class="btn btn-primary" data-fr="Installer — Gratuit" data-en="Install — Free">Installer — Gratuit</a>
+</div>
+
 <!-- ========== HERO ========== -->
-<section class="hero" id="hero">
+<section class="hero">
     <div class="container">
-        <div class="hero-badge reveal" data-fr="🚀 Extension Chrome disponible" data-en="🚀 Chrome Extension available">🚀 Extension Chrome disponible</div>
-        <h1 class="hero-title reveal">
-            <span data-fr="Ta boîte mail." data-en="Your inbox.">Ta boîte mail.</span><br>
-            <span class="gradient-text" data-fr="Sans le bruit." data-en="Without the noise.">Sans le bruit.</span>
-        </h1>
-        <p class="hero-sub reveal" data-fr="MailMood analyse tes emails en local avec l'IA. Tri intelligent par priorité, réponses générées en un clic. Tu ne perds plus jamais 30 minutes à trier." data-en="MailMood analyzes your emails locally with AI. Smart priority sorting, one-click generated replies. Never waste 30 minutes sorting again.">MailMood analyse tes emails en local avec l'IA. Tri intelligent par priorité, réponses générées en un clic. Tu ne perds plus jamais 30 minutes à trier.</p>
+        <div class="hero-badge reveal">
+            <span class="badge-dot"></span>
+            <span data-fr="Nouveau : Réponses IA contextuelles" data-en="New: Contextual AI replies">Nouveau : Réponses IA contextuelles</span>
+        </div>
+        <h1 class="hero-title reveal" data-fr="Ta boîte mail.<br><span class='gradient-text'>Sans le bruit.</span>" data-en="Your inbox.<br><span class='gradient-text'>Without the noise.</span>">Ta boîte mail.<br><span class="gradient-text">Sans le bruit.</span></h1>
+        <p class="hero-sub reveal" data-fr="MailMood analyse tes emails en local avec l'IA. Priorités, résumés, réponses en un clic. <strong>100% privé.</strong>" data-en="MailMood analyzes your emails locally with AI. Priorities, summaries, one-click replies. <strong>100% private.</strong>">MailMood analyse tes emails en local avec l'IA. Priorités, résumés, réponses en un clic. <strong>100% privé.</strong></p>
         <div class="hero-ctas reveal">
-            <a href="#pricing" class="btn btn-primary" data-fr="Installer gratuitement" data-en="Install for free">Installer gratuitement</a>
-            <a href="#demo" class="btn btn-ghost" data-fr="▶ Voir la démo" data-en="▶ See the demo">▶ Voir la démo</a>
+            <a href="#pricing" class="btn btn-primary btn-lg" data-fr="Installer gratuitement" data-en="Install for free">Installer gratuitement</a>
+            <a href="#demo" class="btn btn-ghost btn-lg" data-fr="Voir la démo ↓" data-en="See the demo ↓">Voir la démo ↓</a>
         </div>
         <div class="hero-proof reveal">
             <div class="avatars">
@@ -110,17 +107,17 @@
     <div class="container">
         <div class="section-head">
             <span class="tag" data-fr="Pourquoi MailMood" data-en="Why MailMood">Pourquoi MailMood</span>
-            <h2 data-fr="Reprends le contrôle de ta boîte mail" data-en="Take back control of your inbox">Reprends le contrôle de ta boîte mail</h2>
+            <h2 data-fr="Moins de bruit. Plus de focus." data-en="Less noise. More focus.">Moins de bruit. Plus de focus.</h2>
         </div>
-        <div class="cards-grid">
+        <div class="benefits-grid">
             <div class="card reveal">
                 <div class="card-icon">🎯</div>
-                <h3 data-fr="Tri intelligent instantané" data-en="Instant smart sorting">Tri intelligent instantané</h3>
-                <p data-fr="Chaque mail est classé par priorité : urgent, moyen, faible ou bruit. Tu vois l'essentiel en un coup d'œil." data-en="Every email sorted by priority: urgent, medium, low or noise. See what matters at a glance.">Chaque mail est classé par priorité : urgent, moyen, faible ou bruit. Tu vois l'essentiel en un coup d'œil.</p>
+                <h3 data-fr="Tri intelligent automatique" data-en="Smart automatic sorting">Tri intelligent automatique</h3>
+                <p data-fr="MailMood classe tes emails par priorité en analysant le contexte, l'expéditeur et le contenu. Fini le scroll infini." data-en="MailMood sorts your emails by priority analyzing context, sender and content. No more infinite scrolling.">MailMood classe tes emails par priorité en analysant le contexte, l'expéditeur et le contenu. Fini le scroll infini.</p>
             </div>
             <div class="card reveal">
                 <div class="card-icon">⚡</div>
-                <h3 data-fr="Réponses IA en un clic" data-en="One-click AI replies">Réponses IA en un clic</h3>
+                <h3 data-fr="Réponses IA en 1 clic" data-en="AI replies in 1 click">Réponses IA en 1 clic</h3>
                 <p data-fr="MailMood génère des réponses contextuelles adaptées au ton de chaque conversation. Tu valides, tu envoies." data-en="MailMood generates contextual replies matching each conversation's tone. Validate, send, done.">MailMood génère des réponses contextuelles adaptées au ton de chaque conversation. Tu valides, tu envoies.</p>
             </div>
             <div class="card reveal">
@@ -170,18 +167,18 @@
                     <div class="demo-email" data-id="3">
                         <span class="prio medium">🟡 <em data-fr="Moyen" data-en="Medium">Moyen</em></span>
                         <div class="em-content">
-                            <strong data-fr="Thomas — Équipe Produit" data-en="Thomas — Product Team">Thomas — Équipe Produit</strong>
-                            <span data-fr="Specs V2 prêtes — Review quand tu peux" data-en="V2 Specs ready — Review when you can">Specs V2 prêtes — Review quand tu peux</span>
+                            <strong data-fr="Thomas — Collègue" data-en="Thomas — Colleague">Thomas — Collègue</strong>
+                            <span data-fr="Update projet Alpha — review demandée" data-en="Project Alpha update — review requested">Update projet Alpha — review demandée</span>
                         </div>
-                        <time>08:45</time>
+                        <time>08:47</time>
                     </div>
                     <div class="demo-email" data-id="4">
                         <span class="prio medium">🟡 <em data-fr="Moyen" data-en="Medium">Moyen</em></span>
                         <div class="em-content">
-                            <strong data-fr="Julie — RH" data-en="Julie — HR">Julie — RH</strong>
-                            <span data-fr="Rappel : formulaire congés avant vendredi" data-en="Reminder: leave form due Friday">Rappel : formulaire congés avant vendredi</span>
+                            <strong data-fr="RH — Julie Martin" data-en="HR — Julie Martin">RH — Julie Martin</strong>
+                            <span data-fr="Formulaire télétravail à compléter" data-en="Remote work form to complete">Formulaire télétravail à compléter</span>
                         </div>
-                        <time>08:20</time>
+                        <time>08:15</time>
                     </div>
                     <div class="demo-email" data-id="5">
                         <span class="prio low">🟢 <em data-fr="Faible" data-en="Low">Faible</em></span>
@@ -192,20 +189,21 @@
                         <time>07:30</time>
                     </div>
                     <div class="demo-email" data-id="6">
-                        <span class="prio noise">⚫ <em data-fr="Bruit" data-en="Noise">Bruit</em></span>
+                        <span class="prio low">🟢 <em data-fr="Faible" data-en="Low">Faible</em></span>
                         <div class="em-content">
-                            <strong>Newsletter TechCrunch</strong>
-                            <span data-fr="Les 10 startups à suivre en 2025..." data-en="Top 10 startups to watch in 2025...">Les 10 startups à suivre en 2025...</span>
+                            <strong data-fr="Newsletter — Design Weekly" data-en="Newsletter — Design Weekly">Newsletter — Design Weekly</strong>
+                            <span data-fr="Les 10 tendances UI de 2025" data-en="Top 10 UI trends of 2025">Les 10 tendances UI de 2025</span>
                         </div>
-                        <time>06:00</time>
+                        <time>07:00</time>
                     </div>
                 </div>
-
                 <!-- DETAIL PANEL -->
                 <div class="demo-detail" id="demoDetail">
+
+                    <!-- Empty state -->
                     <div class="detail-empty" id="detailEmpty">
-                        <div class="de-icon">📬</div>
-                        <p data-fr="Sélectionne un email" data-en="Select an email">Sélectionne un email</p>
+                        <span>📬</span>
+                        <p data-fr="Sélectionne un email pour voir l'analyse" data-en="Select an email to see the analysis">Sélectionne un email pour voir l'analyse</p>
                     </div>
 
                     <!-- Mail 1 -->
@@ -215,10 +213,10 @@
                             <div><strong>Marie Dupont</strong><span data-fr="Directrice — 09:14" data-en="Director — 09:14">Directrice — 09:14</span></div>
                         </div>
                         <h4 data-fr="Réunion budget déplacée à 14h" data-en="Budget meeting moved to 2pm">Réunion budget déplacée à 14h</h4>
-                        <div class="dv-body" data-fr="Bonjour,<br><br>La réunion budget initialement prévue à 16h est avancée à 14h aujourd'hui. Merci de confirmer ta disponibilité avant midi.<br><br>Cordialement,<br>Marie Dupont" data-en="Hello,<br><br>The budget meeting originally at 4pm has been moved to 2pm today. Please confirm your availability before noon.<br><br>Best regards,<br>Marie Dupont">Bonjour,<br><br>La réunion budget initialement prévue à 16h est avancée à 14h aujourd'hui. Merci de confirmer ta disponibilité avant midi.<br><br>Cordialement,<br>Marie Dupont</div>
+                        <div class="dv-body" data-fr="Bonjour,<br><br>La réunion budget initialement prévue à 10h est décalée à 14h. Merci de confirmer votre disponibilité.<br><br>Cordialement,<br>Marie Dupont" data-en="Hello,<br><br>The budget meeting originally scheduled at 10am has been moved to 2pm. Please confirm your availability.<br><br>Best regards,<br>Marie Dupont">Bonjour,<br><br>La réunion budget initialement prévue à 10h est décalée à 14h. Merci de confirmer votre disponibilité.<br><br>Cordialement,<br>Marie Dupont</div>
                         <div class="mm-box">
                             <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag urgent">Urgent</span></div>
-                            <div class="mm-info" data-fr="⏰ Deadline : aujourd'hui midi<br>👤 Expéditeur fréquent (directrice)<br>📋 Action : confirmer présence" data-en="⏰ Deadline: today noon<br>👤 Frequent sender (director)<br>📋 Action: confirm attendance">⏰ Deadline : aujourd'hui midi<br>👤 Expéditeur fréquent (directrice)<br>📋 Action : confirmer présence</div>
+                            <div class="mm-info" data-fr="📅 Changement d'horaire détecté<br>👤 Expéditrice : Direction<br>⏱️ Réponse recommandée sous 30 min" data-en="📅 Schedule change detected<br>👤 Sender: Management<br>⏱️ Reply recommended within 30 min">📅 Changement d'horaire détecté<br>👤 Expéditrice : Direction<br>⏱️ Réponse recommandée sous 30 min</div>
                             <button class="mm-btn" data-id="1" data-fr="⚡ Répondre avec MailMood" data-en="⚡ Reply with MailMood">⚡ Répondre avec MailMood</button>
                             <div class="mm-reply" data-reply="1"></div>
                         </div>
@@ -244,13 +242,13 @@
                     <div class="detail-view" data-view="3">
                         <div class="dv-head">
                             <div class="dv-avatar" style="background:#00B894">TH</div>
-                            <div><strong>Thomas</strong><span data-fr="Équipe Produit — 08:45" data-en="Product Team — 08:45">Équipe Produit — 08:45</span></div>
+                            <div><strong>Thomas</strong><span data-fr="Collègue — 08:47" data-en="Colleague — 08:47">Collègue — 08:47</span></div>
                         </div>
-                        <h4 data-fr="Specs V2 prêtes" data-en="V2 Specs ready">Specs V2 prêtes</h4>
-                        <div class="dv-body" data-fr="Salut,<br><br>Les specs de la V2 sont finalisées. Tu peux les review quand tu as un moment, rien d'urgent. Le doc est dans Notion.<br><br>Thomas" data-en="Hey,<br><br>V2 specs are finalized. Review them when you get a chance, nothing urgent. Doc is in Notion.<br><br>Thomas">Salut,<br><br>Les specs de la V2 sont finalisées. Tu peux les review quand tu as un moment, rien d'urgent. Le doc est dans Notion.<br><br>Thomas</div>
+                        <h4 data-fr="Update projet Alpha — review demandée" data-en="Project Alpha update — review requested">Update projet Alpha — review demandée</h4>
+                        <div class="dv-body" data-fr="Salut,<br><br>J'ai pushé les dernières modifs sur la branche dev. Tu peux review quand tu as un moment ? Rien d'urgent mais ce serait bien avant vendredi.<br><br>Merci !<br>Thomas" data-en="Hey,<br><br>I pushed the latest changes on the dev branch. Can you review when you have a moment? Nothing urgent but ideally before Friday.<br><br>Thanks!<br>Thomas">Salut,<br><br>J'ai pushé les dernières modifs sur la branche dev. Tu peux review quand tu as un moment ? Rien d'urgent mais ce serait bien avant vendredi.<br><br>Merci !<br>Thomas</div>
                         <div class="mm-box">
-                            <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag medium" data-fr="Moyen" data-en="Medium">Moyen</span></div>
-                            <div class="mm-info" data-fr="📄 Document partagé<br>⏰ Pas de deadline<br>🔄 Review demandée" data-en="📄 Shared document<br>⏰ No deadline<br>🔄 Review requested">📄 Document partagé<br>⏰ Pas de deadline<br>🔄 Review demandée</div>
+                            <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag medium">Moyen</span></div>
+                            <div class="mm-info" data-fr="🔀 Code review demandée<br>📅 Deadline : vendredi<br>👤 Collègue direct" data-en="🔀 Code review requested<br>📅 Deadline: Friday<br>👤 Direct colleague">🔀 Code review demandée<br>📅 Deadline : vendredi<br>👤 Collègue direct</div>
                             <button class="mm-btn" data-id="3" data-fr="⚡ Répondre avec MailMood" data-en="⚡ Reply with MailMood">⚡ Répondre avec MailMood</button>
                             <div class="mm-reply" data-reply="3"></div>
                         </div>
@@ -259,14 +257,14 @@
                     <!-- Mail 4 -->
                     <div class="detail-view" data-view="4">
                         <div class="dv-head">
-                            <div class="dv-avatar" style="background:#fd79a8">JL</div>
-                            <div><strong>Julie</strong><span data-fr="RH — 08:20" data-en="HR — 08:20">RH — 08:20</span></div>
+                            <div class="dv-avatar" style="background:#0984E3">JM</div>
+                            <div><strong>Julie Martin</strong><span data-fr="RH — 08:15" data-en="HR — 08:15">RH — 08:15</span></div>
                         </div>
-                        <h4 data-fr="Rappel : formulaire congés" data-en="Reminder: leave form">Rappel : formulaire congés</h4>
-                        <div class="dv-body" data-fr="Bonjour,<br><br>Petit rappel : merci de remplir ton formulaire de congés pour le prochain trimestre avant vendredi.<br><br>Julie — RH" data-en="Hello,<br><br>Quick reminder: please fill your leave form for next quarter before Friday.<br><br>Julie — HR">Bonjour,<br><br>Petit rappel : merci de remplir ton formulaire de congés pour le prochain trimestre avant vendredi.<br><br>Julie — RH</div>
+                        <h4 data-fr="Formulaire télétravail à compléter" data-en="Remote work form to complete">Formulaire télétravail à compléter</h4>
+                        <div class="dv-body" data-fr="Bonjour,<br><br>Merci de compléter le formulaire de demande de télétravail avant la fin de semaine. Vous le trouverez en pièce jointe.<br><br>Cordialement,<br>Julie Martin — RH" data-en="Hello,<br><br>Please complete the remote work request form by end of week. You'll find it attached.<br><br>Best regards,<br>Julie Martin — HR">Bonjour,<br><br>Merci de compléter le formulaire de demande de télétravail avant la fin de semaine. Vous le trouverez en pièce jointe.<br><br>Cordialement,<br>Julie Martin — RH</div>
                         <div class="mm-box">
                             <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag medium">Moyen</span></div>
-                            <div class="mm-info" data-fr="📅 Deadline vendredi<br>📝 Formulaire à remplir<br>🏢 Interne" data-en="📅 Deadline Friday<br>📝 Form to fill<br>🏢 Internal">📅 Deadline vendredi<br>📝 Formulaire à remplir<br>🏢 Interne</div>
+                            <div class="mm-info" data-fr="📋 Formulaire à remplir<br>📅 Deadline : fin de semaine<br>📎 Pièce jointe détectée" data-en="📋 Form to fill<br>📅 Deadline: end of week<br>📎 Attachment detected">📋 Formulaire à remplir<br>📅 Deadline : fin de semaine<br>📎 Pièce jointe détectée</div>
                             <button class="mm-btn" data-id="4" data-fr="⚡ Répondre avec MailMood" data-en="⚡ Reply with MailMood">⚡ Répondre avec MailMood</button>
                             <div class="mm-reply" data-reply="4"></div>
                         </div>
@@ -275,15 +273,15 @@
                     <!-- Mail 5 -->
                     <div class="detail-view" data-view="5">
                         <div class="dv-head">
-                            <div class="dv-avatar" style="background:#0984E3">in</div>
+                            <div class="dv-avatar" style="background:#0077B5">IN</div>
                             <div><strong>LinkedIn</strong><span>07:30</span></div>
                         </div>
                         <h4 data-fr="3 personnes ont consulté votre profil" data-en="3 people viewed your profile">3 personnes ont consulté votre profil</h4>
-                        <div class="dv-body" data-fr="Votre profil a été consulté par 3 personnes cette semaine, dont un recruteur chez Google." data-en="Your profile was viewed by 3 people this week, including a recruiter at Google.">Votre profil a été consulté par 3 personnes cette semaine, dont un recruteur chez Google.</div>
+                        <div class="dv-body" data-fr="Votre profil a été consulté par 3 personnes cette semaine, dont un recruteur chez Google...<br><br>Voir qui a consulté votre profil →" data-en="Your profile was viewed by 3 people this week, including a recruiter at Google...<br><br>See who viewed your profile →">Votre profil a été consulté par 3 personnes cette semaine, dont un recruteur chez Google...<br><br>Voir qui a consulté votre profil →</div>
                         <div class="mm-box">
                             <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag low" data-fr="Faible" data-en="Low">Faible</span></div>
-                            <div class="mm-info" data-fr="📊 Notification auto<br>⏰ Aucune action requise<br>🤖 Email automatisé" data-en="📊 Auto notification<br>⏰ No action needed<br>🤖 Automated email">📊 Notification auto<br>⏰ Aucune action requise<br>🤖 Email automatisé</div>
-                            <button class="mm-btn" disabled style="opacity:.5;cursor:default" data-fr="Pas de réponse nécessaire" data-en="No reply needed">Pas de réponse nécessaire</button>
+                            <div class="mm-info" data-fr="🔔 Notification automatique<br>🚫 Aucune action requise<br>📁 Suggestion : archiver" data-en="🔔 Automatic notification<br>🚫 No action needed<br>📁 Suggestion: archive">🔔 Notification automatique<br>🚫 Aucune action requise<br>📁 Suggestion : archiver</div>
+                            <button class="mm-btn" disabled style="opacity:.5;cursor:default" data-fr="Archiver automatiquement" data-en="Auto-archive">Archiver automatiquement</button>
                             <div class="mm-reply" data-reply="5"></div>
                         </div>
                     </div>
@@ -291,18 +289,19 @@
                     <!-- Mail 6 -->
                     <div class="detail-view" data-view="6">
                         <div class="dv-head">
-                            <div class="dv-avatar" style="background:#636e72">TC</div>
-                            <div><strong>TechCrunch</strong><span>06:00</span></div>
+                            <div class="dv-avatar" style="background:#636e72">DW</div>
+                            <div><strong>Design Weekly</strong><span data-fr="Newsletter — 07:00" data-en="Newsletter — 07:00">Newsletter — 07:00</span></div>
                         </div>
-                        <h4 data-fr="Les 10 startups à suivre en 2025" data-en="Top 10 startups to watch in 2025">Les 10 startups à suivre en 2025</h4>
-                        <div class="dv-body" data-fr="Découvrez notre sélection des 10 startups les plus prometteuses cette année..." data-en="Discover our selection of the 10 most promising startups this year...">Découvrez notre sélection des 10 startups les plus prometteuses cette année...</div>
+                        <h4 data-fr="Les 10 tendances UI de 2025" data-en="Top 10 UI trends of 2025">Les 10 tendances UI de 2025</h4>
+                        <div class="dv-body" data-fr="Découvrez les tendances qui vont façonner le design cette année : glassmorphism, AI-driven UI, micro-interactions...<br><br>Lire l'article complet →" data-en="Discover the trends shaping design this year: glassmorphism, AI-driven UI, micro-interactions...<br><br>Read full article →">Découvrez les tendances qui vont façonner le design cette année : glassmorphism, AI-driven UI, micro-interactions...<br><br>Lire l'article complet →</div>
                         <div class="mm-box">
-                            <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag noise" data-fr="Bruit" data-en="Noise">Bruit</span></div>
-                            <div class="mm-info" data-fr="📰 Newsletter marketing<br>🚫 Aucune action requise<br>📁 Suggestion : archiver" data-en="📰 Marketing newsletter<br>🚫 No action needed<br>📁 Suggestion: archive">📰 Newsletter marketing<br>🚫 Aucune action requise<br>📁 Suggestion : archiver</div>
-                            <button class="mm-btn" disabled style="opacity:.5;cursor:default" data-fr="Archiver automatiquement" data-en="Auto-archive">Archiver automatiquement</button>
+                            <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag low" data-fr="Info" data-en="Info">Info</span></div>
+                            <div class="mm-info" data-fr="📰 Newsletter détectée<br>📌 Aucune action requise<br>🗂️ Archivage suggéré" data-en="📰 Newsletter detected<br>📌 No action required<br>🗂️ Archive suggested">📰 Newsletter détectée<br>📌 Aucune action requise<br>🗂️ Archivage suggéré</div>
+                            <button class="mm-btn" disabled style="opacity:.5;cursor:default" data-fr="📂 Archiver automatiquement" data-en="📂 Auto-archive">📂 Archiver automatiquement</button>
                             <div class="mm-reply" data-reply="6"></div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -312,26 +311,24 @@
     </div>
 </section>
 
-<!-- ========== COMMENT ÇA MARCHE ========== -->
+<!-- ========== HOW IT WORKS ========== -->
 <section class="how" id="how">
     <div class="container">
         <div class="section-head">
             <span class="tag" data-fr="Comment ça marche" data-en="How it works">Comment ça marche</span>
-            <h2 data-fr="3 étapes, 2 minutes" data-en="3 steps, 2 minutes">3 étapes, 2 minutes</h2>
+            <h2 data-fr="3 étapes. 30 secondes." data-en="3 steps. 30 seconds.">3 étapes. 30 secondes.</h2>
         </div>
         <div class="steps">
             <div class="step reveal">
                 <div class="step-num">1</div>
                 <h3 data-fr="Installe l'extension" data-en="Install the extension">Installe l'extension</h3>
-                <p data-fr="Un clic sur le Chrome Web Store. Aucune configuration." data-en="One click on Chrome Web Store. Zero config.">Un clic sur le Chrome Web Store. Aucune configuration.</p>
+                <p data-fr="Un clic depuis le Chrome Web Store. Rien à configurer." data-en="One click from the Chrome Web Store. Nothing to configure.">Un clic depuis le Chrome Web Store. Rien à configurer.</p>
             </div>
-            <div class="step-line"></div>
             <div class="step reveal">
                 <div class="step-num">2</div>
-                <h3 data-fr="Ouvre Gmail" data-en="Open Gmail">Ouvre Gmail</h3>
-                <p data-fr="MailMood analyse automatiquement tes emails et affiche les priorités." data-en="MailMood automatically analyzes your emails and shows priorities.">MailMood analyse automatiquement tes emails et affiche les priorités.</p>
+                <h3 data-fr="Ouvre ta boîte mail" data-en="Open your inbox">Ouvre ta boîte mail</h3>
+                <p data-fr="MailMood analyse et trie tes emails automatiquement par priorité." data-en="MailMood analyzes and sorts your emails automatically by priority.">MailMood analyse et trie tes emails automatiquement par priorité.</p>
             </div>
-            <div class="step-line"></div>
             <div class="step reveal">
                 <div class="step-num">3</div>
                 <h3 data-fr="Réponds en un clic" data-en="Reply in one click">Réponds en un clic</h3>
@@ -346,23 +343,24 @@
     <div class="container">
         <div class="section-head">
             <span class="tag" data-fr="Tarifs" data-en="Pricing">Tarifs</span>
-            <h2 data-fr="Simple. Transparent. Sans surprise." data-en="Simple. Transparent. No surprises.">Simple. Transparent. Sans surprise.</h2>
+            <h2 data-fr="Simple. Transparent. Honnête." data-en="Simple. Transparent. Honest.">Simple. Transparent. Honnête.</h2>
         </div>
-        <div class="pricing-grid">
+        <div class="plans">
             <!-- Free -->
             <div class="plan reveal">
                 <h3 data-fr="Gratuit" data-en="Free">Gratuit</h3>
                 <div class="plan-price"><em>0€</em><span data-fr="/mois" data-en="/mo">/mois</span></div>
                 <ul>
-                    <li data-fr="✓ Tri par priorité (50 emails/jour)" data-en="✓ Priority sorting (50 emails/day)">✓ Tri par priorité (50 emails/jour)</li>
-                    <li data-fr="✓ 10 réponses IA / jour" data-en="✓ 10 AI replies / day">✓ 10 réponses IA / jour</li>
-                    <li data-fr="✓ 100% local & privé" data-en="✓ 100% local & private">✓ 100% local & privé</li>
+                    <li data-fr="✓ 50 emails/jour" data-en="✓ 50 emails/day">✓ 50 emails/jour</li>
+                    <li data-fr="✓ Tri intelligent" data-en="✓ Smart sorting">✓ Tri intelligent</li>
+                    <li data-fr="✓ 5 réponses IA/jour" data-en="✓ 5 AI replies/day">✓ 5 réponses IA/jour</li>
+                    <li data-fr="✓ 100% local" data-en="✓ 100% local">✓ 100% local</li>
                 </ul>
                 <a href="#" class="btn btn-ghost" data-fr="Commencer" data-en="Get started">Commencer</a>
             </div>
             <!-- Pro -->
-            <div class="plan recommended reveal">
-                <div class="plan-badge" data-fr="Populaire" data-en="Popular">Populaire</div>
+            <div class="plan popular reveal">
+                <div class="plan-badge" data-fr="⭐ Populaire" data-en="⭐ Popular">⭐ Populaire</div>
                 <h3>Pro</h3>
                 <div class="plan-price"><em>9€</em><span data-fr="/mois" data-en="/mo">/mois</span></div>
                 <ul>
@@ -412,16 +410,15 @@
                 </div>
             </div>
             <div class="testi reveal">
-                <p data-fr="\"Enfin un outil qui respecte la vie privée. Tout reste en local, c'est rassurant.\"" data-en="\"Finally a tool that respects privacy. Everything stays local, it's reassuring.\"">"Enfin un outil qui respecte la vie privée. Tout reste en local, c'est rassurant."</p>
+                <p data-fr="\"Enfin une app qui respecte ma vie privée. Tout est local, c'est rassurant.\"" data-en="\"Finally an app that respects my privacy. Everything is local, it's reassuring.\"">"Enfin une app qui respecte ma vie privée. Tout est local, c'est rassurant."</p>
                 <div class="testi-author">
-                    <div class="testi-avatar" style="background:#E17055">AC</div>
-                    <div><strong>Alice C.</strong><span data-fr="CTO Startup" data-en="CTO Startup">CTO Startup</span></div>
+                    <div class="testi-avatar" style="background:#E17055">CK</div>
+                    <div><strong>Clara K.</strong><span data-fr="Avocate" data-en="Lawyer">Avocate</span></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
 <!-- ========== FAQ ========== -->
 <section class="faq" id="faq">
     <div class="container">
@@ -431,24 +428,28 @@
         </div>
         <div class="faq-list">
             <div class="faq-item reveal">
-                <button class="faq-q" data-fr="Mes emails sont-ils envoyés à un serveur ?" data-en="Are my emails sent to a server?">Mes emails sont-ils envoyés à un serveur ?</button>
-                <div class="faq-a"><p data-fr="Non. Tout le traitement se fait directement dans votre navigateur. Aucun email ne quitte votre machine. Nous n'avons techniquement pas accès à vos données." data-en="No. All processing happens directly in your browser. No email leaves your machine. We technically have no access to your data.">Non. Tout le traitement se fait directement dans votre navigateur. Aucun email ne quitte votre machine. Nous n'avons techniquement pas accès à vos données.</p></div>
+                <button class="faq-q" data-fr="Est-ce que mes emails sont envoyés sur un serveur ?" data-en="Are my emails sent to a server?">Est-ce que mes emails sont envoyés sur un serveur ?</button>
+                <div class="faq-a"><p data-fr="Non. Tout le traitement se fait localement dans votre navigateur. Aucune donnée ne quitte votre machine. Jamais." data-en="No. All processing happens locally in your browser. No data ever leaves your machine. Ever.">Non. Tout le traitement se fait localement dans votre navigateur. Aucune donnée ne quitte votre machine. Jamais.</p></div>
             </div>
             <div class="faq-item reveal">
-                <button class="faq-q" data-fr="Ça marche avec Outlook / Yahoo ?" data-en="Does it work with Outlook / Yahoo?">Ça marche avec Outlook / Yahoo ?</button>
-                <div class="faq-a"><p data-fr="Pour le moment, MailMood est optimisé pour Gmail. Le support Outlook est en cours de développement et prévu pour Q3 2025." data-en="Currently, MailMood is optimized for Gmail. Outlook support is in development, planned for Q3 2025.">Pour le moment, MailMood est optimisé pour Gmail. Le support Outlook est en cours de développement et prévu pour Q3 2025.</p></div>
+                <button class="faq-q" data-fr="Ça marche avec quels services mail ?" data-en="Which email services does it work with?">Ça marche avec quels services mail ?</button>
+                <div class="faq-a"><p data-fr="Actuellement Gmail. Outlook et Apple Mail sont en cours de développement et arrivent très bientôt." data-en="Currently Gmail. Outlook and Apple Mail are in development and coming very soon.">Actuellement Gmail. Outlook et Apple Mail sont en cours de développement et arrivent très bientôt.</p></div>
             </div>
             <div class="faq-item reveal">
-                <button class="faq-q" data-fr="Comment fonctionne la réponse IA ?" data-en="How does the AI reply work?">Comment fonctionne la réponse IA ?</button>
-                <div class="faq-a"><p data-fr="MailMood analyse le contexte, le ton et l'historique de la conversation pour générer une réponse adaptée. Vous pouvez la modifier avant envoi." data-en="MailMood analyzes context, tone and conversation history to generate a tailored reply. You can edit it before sending.">MailMood analyse le contexte, le ton et l'historique de la conversation pour générer une réponse adaptée. Vous pouvez la modifier avant envoi.</p></div>
+                <button class="faq-q" data-fr="La version gratuite est-elle limitée ?" data-en="Is the free version limited?">La version gratuite est-elle limitée ?</button>
+                <div class="faq-a"><p data-fr="Elle inclut le tri intelligent pour 50 emails/jour et 5 réponses IA. Largement suffisant pour un usage personnel." data-en="It includes smart sorting for 50 emails/day and 5 AI replies. More than enough for personal use.">Elle inclut le tri intelligent pour 50 emails/jour et 5 réponses IA. Largement suffisant pour un usage personnel.</p></div>
             </div>
             <div class="faq-item reveal">
                 <button class="faq-q" data-fr="Je peux annuler mon abonnement ?" data-en="Can I cancel my subscription?">Je peux annuler mon abonnement ?</button>
-                <div class="faq-a"><p data-fr="Oui, à tout moment en un clic depuis votre espace. Aucun engagement, aucuns frais cachés." data-en="Yes, at any time with one click from your dashboard. No commitment, no hidden fees.">Oui, à tout moment en un clic depuis votre espace. Aucun engagement, aucuns frais cachés.</p></div>
+                <div class="faq-a"><p data-fr="Oui, à tout moment en un clic depuis votre espace. Aucun engagement, aucuns frais cachés." data-en="Yes, anytime with one click from your dashboard. No commitment, no hidden fees.">Oui, à tout moment en un clic depuis votre espace. Aucun engagement, aucuns frais cachés.</p></div>
             </div>
             <div class="faq-item reveal">
                 <button class="faq-q" data-fr="C'est quoi le modèle IA utilisé ?" data-en="What AI model is used?">C'est quoi le modèle IA utilisé ?</button>
                 <div class="faq-a"><p data-fr="Nous utilisons un modèle léger optimisé pour tourner localement dans votre navigateur via WebAssembly. Aucun appel API externe." data-en="We use a lightweight model optimized to run locally in your browser via WebAssembly. No external API calls.">Nous utilisons un modèle léger optimisé pour tourner localement dans votre navigateur via WebAssembly. Aucun appel API externe.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-q" data-fr="MailMood peut-il envoyer des emails à ma place ?" data-en="Can MailMood send emails on my behalf?">MailMood peut-il envoyer des emails à ma place ?</button>
+                <div class="faq-a"><p data-fr="Non. MailMood génère une suggestion de réponse. Vous restez maître : vous validez, modifiez ou ignorez avant tout envoi." data-en="No. MailMood generates a reply suggestion. You stay in control: you validate, edit or ignore before any send.">Non. MailMood génère une suggestion de réponse. Vous restez maître : vous validez, modifiez ou ignorez avant tout envoi.</p></div>
             </div>
         </div>
     </div>
