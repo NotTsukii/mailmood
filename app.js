@@ -274,5 +274,66 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isMobile() && emails.length > 0) {
         setTimeout(() => selectEmail('1'), 600);
     }
+    // ========== ACTIVE NAV LINK ON SCROLL ==========
+    const sections = document.querySelectorAll('section[id]');
+
+    window.addEventListener('scroll', () => {
+        const scrollY = window.pageYOffset + 120;
+
+        sections.forEach(section => {
+            const top = section.offsetTop;
+            const height = section.offsetHeight;
+            const id = section.getAttribute('id');
+            const link = document.querySelector(`.nav-links a[href="#${id}"]`);
+            const linkM = document.querySelector(`.mobile-nav a[href="#${id}"]`);
+
+            if (link) {
+                if (scrollY >= top && scrollY < top + height) {
+                    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            }
+            if (linkM) {
+                if (scrollY >= top && scrollY < top + height) {
+                    document.querySelectorAll('.mobile-nav a').forEach(a => a.classList.remove('active'));
+                    linkM.classList.add('active');
+                }
+            }
+        });
+    }, { passive: true });
+
+    // ========== TILT EFFECT ON CARDS (desktop) ==========
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+        document.querySelectorAll('.card, .plan, .testimonial').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 25;
+                const rotateY = (centerX - x) / 25;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+    }
+
+    // ========== KEYBOARD: ESC CLOSE MOBILE NAV ==========
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('open')) {
+            burger.classList.remove('active');
+            mobileNav.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // ========== PAGE LOADED CLASS ==========
+    window.addEventListener('load', () => {
+        document.body.classList.add('loaded');
+    });
 
 });
