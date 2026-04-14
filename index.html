@@ -1,503 +1,456 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="dark" data-lang="fr">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MailMood — Ta boîte mail. Sans le bruit.</title>
-    <meta name="description" content="MailMood analyse tes emails en local avec l'IA. Tri intelligent, réponses automatiques, zéro bruit.">
-    <meta property="og:title" content="MailMood — Ta boîte mail. Sans le bruit.">
-    <meta property="og:description" content="MailMood analyse tes emails en local avec l'IA.">
-    <meta property="og:type" content="website">
-    <meta name="theme-color" content="#6C5CE7">
-    <link rel="stylesheet" href="style.css">
+    <title>MailMood — L'IA qui comprend vos emails</title>
+    <meta name="description" content="MailMood analyse le ton émotionnel de vos emails et génère des réponses parfaites en un clic.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📧</text></svg>">
 </head>
 <body>
 
-<!-- ========== NAVBAR ========== -->
-<nav class="navbar" id="navbar">
-    <div class="nav-container">
-        <a href="#" class="nav-logo">
-            <span class="logo-icon">📧</span>
-            <span class="logo-text">MailMood</span>
-        </a>
-
-        <div class="nav-links" id="navLinks">
-            <a href="#benefits" data-fr="Avantages" data-en="Benefits">Avantages</a>
-            <a href="#demo" data-fr="Démo" data-en="Demo">Démo</a>
-            <a href="#pricing" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
-            <a href="#faq" data-fr="FAQ" data-en="FAQ">FAQ</a>
-        </div>
-
-        <div class="nav-actions">
-            <button class="theme-toggle" id="themeToggle" aria-label="Changer le thème">
-                <div class="toggle-track">
-                    <div class="toggle-thumb">
-                        <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                        <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                    </div>
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="8" fill="#786BFF"/>
+                        <path d="M8 12L16 8L24 12V20L16 24L8 20V12Z" stroke="#fff" stroke-width="2" fill="none"/>
+                        <circle cx="16" cy="16" r="3" fill="#fff"/>
+                    </svg>
                 </div>
-            </button>
-            <button class="lang-toggle" id="langToggle"><span>EN</span></button>
-            <a href="#pricing" class="nav-cta" data-fr="Installer — Gratuit" data-en="Install — Free">Installer — Gratuit</a>
+                <span>MailMood</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="active" data-fr="Produit" data-en="Product">Produit</a>
+                <a href="demo.html" data-fr="Démo" data-en="Demo">Démo</a>
+                <a href="pricing.html" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
+                <a href="#features" data-fr="Fonctionnalités" data-en="Features">Fonctionnalités</a>
+                <a href="#testimonials" data-fr="Avis" data-en="Reviews">Avis</a>
+                <a href="#contact" data-fr="Contact" data-en="Contact">Contact</a>
+            </div>
         </div>
-
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-            <span></span><span></span><span></span>
+        <div class="nav-right">
+            <div class="nav-lang">
+                <button class="lang-btn active" data-lang="fr">FR</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+            <a href="#" class="btn-nav" data-fr="Connexion" data-en="Log in">Connexion</a>
+            <a href="pricing.html" class="btn-primary" data-fr="Commencer" data-en="Get started">Commencer</a>
+        </div>
+        <button class="mobile-menu-btn" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
         </button>
+    </nav>
+
+    <!-- ========== MOBILE NAV ========== -->
+    <div class="mobile-nav">
+        <a href="index.html" data-fr="Produit" data-en="Product">Produit</a>
+        <a href="demo.html" data-fr="Démo" data-en="Demo">Démo</a>
+        <a href="pricing.html" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
+        <a href="#features" data-fr="Fonctionnalités" data-en="Features">Fonctionnalités</a>
+        <a href="#testimonials" data-fr="Avis" data-en="Reviews">Avis</a>
+        <a href="#contact" data-fr="Contact" data-en="Contact">Contact</a>
+        <div class="mobile-lang">
+            <button class="lang-btn active" data-lang="fr">FR</button>
+            <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+        <a href="pricing.html" class="btn-primary mobile-cta" data-fr="Commencer" data-en="Get started">Commencer</a>
     </div>
-</nav>
 
-<!-- ========== MOBILE NAV ========== -->
-<div class="mobile-nav" id="mobileNav">
-    <a href="#benefits" data-fr="Avantages" data-en="Benefits">Avantages</a>
-    <a href="#demo" data-fr="Démo" data-en="Demo">Démo</a>
-    <a href="#pricing" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
-    <a href="#faq" data-fr="FAQ" data-en="FAQ">FAQ</a>
-    <hr>
-    <button id="themeToggleM">☀️ Light</button>
-    <button id="langToggleM">🇬🇧 EN</button>
-    <a href="#pricing" class="btn btn-primary" data-fr="Installer — Gratuit" data-en="Install — Free">Installer — Gratuit</a>
-</div>
-
-<!-- ========== HERO ========== -->
-<section class="hero">
-    <div class="container">
-        <div class="hero-badge reveal">
-            <span class="badge-dot"></span>
-            <span data-fr="Nouveau : Réponses IA contextuelles" data-en="New: Contextual AI replies">Nouveau : Réponses IA contextuelles</span>
-        </div>
-        <h1 class="hero-title reveal" data-fr="Ta boîte mail.<br><span class='gradient-text'>Sans le bruit.</span>" data-en="Your inbox.<br><span class='gradient-text'>Without the noise.</span>">Ta boîte mail.<br><span class="gradient-text">Sans le bruit.</span></h1>
-        <p class="hero-sub reveal" data-fr="MailMood analyse tes emails en local avec l'IA. Priorités, résumés, réponses en un clic. <strong>100% privé.</strong>" data-en="MailMood analyzes your emails locally with AI. Priorities, summaries, one-click replies. <strong>100% private.</strong>">MailMood analyse tes emails en local avec l'IA. Priorités, résumés, réponses en un clic. <strong>100% privé.</strong></p>
-        <div class="hero-ctas reveal">
-            <a href="#pricing" class="btn btn-primary btn-lg" data-fr="Installer gratuitement" data-en="Install for free">Installer gratuitement</a>
-            <a href="#demo" class="btn btn-ghost btn-lg" data-fr="Voir la démo ↓" data-en="See the demo ↓">Voir la démo ↓</a>
-        </div>
-        <div class="hero-proof reveal">
-            <div class="avatars">
-                <span style="background:#6C5CE7">M</span>
-                <span style="background:#00B894">S</span>
-                <span style="background:#E17055">A</span>
-                <span style="background:#0984E3">L</span>
-                <span style="background:#FDCB6E;color:#2d3436">K</span>
+    <!-- ========== HERO ========== -->
+    <section class="hero">
+        <div class="hero-bg-glow"></div>
+        <div class="hero-inner">
+            <div class="hero-badge reveal">
+                <span class="hero-badge-dot pulse"></span>
+                <span data-fr="Nouveau — Réponses automatiques IA" data-en="New — AI Auto-Replies">Nouveau — Réponses automatiques IA</span>
             </div>
-            <p data-fr="Rejoint par <strong>2,400+</strong> utilisateurs cette semaine" data-en="Joined by <strong>2,400+</strong> users this week">Rejoint par <strong>2,400+</strong> utilisateurs cette semaine</p>
-        </div>
-    </div>
-    <div class="hero-glow"></div>
-</section>
-
-<!-- ========== SOCIAL PROOF ========== -->
-<section class="proof-bar">
-    <div class="container">
-        <p class="proof-label" data-fr="Ils nous font confiance" data-en="Trusted by">Ils nous font confiance</p>
-        <div class="marquee">
-            <div class="marquee-track">
-                <span>Google</span><span>Stripe</span><span>Notion</span><span>Vercel</span><span>Linear</span><span>Figma</span><span>Slack</span>
-                <span>Google</span><span>Stripe</span><span>Notion</span><span>Vercel</span><span>Linear</span><span>Figma</span><span>Slack</span>
+            <h1 class="reveal">
+                <span data-fr="Comprenez le ton de" data-en="Understand the tone of">Comprenez le ton de</span><br>
+                <span class="gradient" data-fr="chaque email, instantanément" data-en="every email, instantly">chaque email, instantanément</span>
+            </h1>
+            <p class="hero-sub reveal" data-fr="MailMood analyse l'émotion derrière chaque message et génère la réponse parfaite en un clic. Fini les malentendus, place à la communication intelligente." data-en="MailMood analyzes the emotion behind every message and generates the perfect reply in one click. No more misunderstandings, welcome to smart communication.">
+                MailMood analyse l'émotion derrière chaque message et génère la réponse parfaite en un clic. Fini les malentendus, place à la communication intelligente.
+            </p>
+            <div class="hero-ctas reveal">
+                <a href="demo.html" class="btn-hero-primary">
+                    <span data-fr="Essayer la démo" data-en="Try the demo">Essayer la démo</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+                <a href="pricing.html" class="btn-hero-secondary">
+                    <span data-fr="Voir les tarifs" data-en="View pricing">Voir les tarifs</span>
+                </a>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- ========== BÉNÉFICES ========== -->
-<section class="benefits" id="benefits">
-    <div class="container">
-        <div class="section-head">
-            <span class="tag" data-fr="Pourquoi MailMood" data-en="Why MailMood">Pourquoi MailMood</span>
-            <h2 data-fr="Moins de bruit. Plus de focus." data-en="Less noise. More focus.">Moins de bruit. Plus de focus.</h2>
-        </div>
-        <div class="benefits-grid">
-            <div class="card reveal">
-                <div class="card-icon">🎯</div>
-                <h3 data-fr="Tri intelligent automatique" data-en="Smart automatic sorting">Tri intelligent automatique</h3>
-                <p data-fr="MailMood classe tes emails par priorité en analysant le contexte, l'expéditeur et le contenu. Fini le scroll infini." data-en="MailMood sorts your emails by priority analyzing context, sender and content. No more infinite scrolling.">MailMood classe tes emails par priorité en analysant le contexte, l'expéditeur et le contenu. Fini le scroll infini.</p>
-            </div>
-            <div class="card reveal">
-                <div class="card-icon">⚡</div>
-                <h3 data-fr="Réponses IA en 1 clic" data-en="AI replies in 1 click">Réponses IA en 1 clic</h3>
-                <p data-fr="MailMood génère des réponses contextuelles adaptées au ton de chaque conversation. Tu valides, tu envoies." data-en="MailMood generates contextual replies matching each conversation's tone. Validate, send, done.">MailMood génère des réponses contextuelles adaptées au ton de chaque conversation. Tu valides, tu envoies.</p>
-            </div>
-            <div class="card reveal">
-                <div class="card-icon">🔒</div>
-                <h3 data-fr="100% privé, 100% local" data-en="100% private, 100% local">100% privé, 100% local</h3>
-                <p data-fr="Aucun email ne quitte ton navigateur. L'analyse se fait en local. Tes données restent les tiennes." data-en="No email leaves your browser. Analysis is local. Your data stays yours.">Aucun email ne quitte ton navigateur. L'analyse se fait en local. Tes données restent les tiennes.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ========== DÉMO INTERACTIVE ========== -->
-<section class="demo" id="demo">
-    <div class="container">
-        <div class="section-head">
-            <span class="tag" data-fr="⚡ Démo interactive" data-en="⚡ Interactive demo">⚡ Démo interactive</span>
-            <h2 data-fr="Essaie MailMood maintenant" data-en="Try MailMood now">Essaie MailMood maintenant</h2>
-            <p class="section-sub" data-fr="Clique sur un email pour voir la magie opérer." data-en="Click an email to see the magic happen.">Clique sur un email pour voir la magie opérer.</p>
-        </div>
-
-        <div class="demo-window reveal">
-            <div class="demo-bar">
-                <div class="demo-dots"><i></i><i></i><i></i></div>
-                <span data-fr="Gmail — Boîte de réception (6)" data-en="Gmail — Inbox (6)">Gmail — Boîte de réception (6)</span>
-                <span class="demo-badge">📧 MailMood ON</span>
-            </div>
-
-            <div class="demo-split">
-                <!-- INBOX LIST -->
-                <div class="demo-inbox" id="demoInbox">
-                    <div class="demo-email active" data-id="1">
-                        <span class="prio urgent">🔴 <em data-fr="Urgent" data-en="Urgent">Urgent</em></span>
-                        <div class="em-content">
-                            <strong data-fr="Marie Dupont — Directrice" data-en="Marie Dupont — Director">Marie Dupont — Directrice</strong>
-                            <span data-fr="Réunion budget déplacée à 14h" data-en="Budget meeting moved to 2pm">Réunion budget déplacée à 14h</span>
-                        </div>
-                        <time>09:14</time>
-                    </div>
-                    <div class="demo-email" data-id="2">
-                        <span class="prio urgent">🔴 <em data-fr="Urgent" data-en="Urgent">Urgent</em></span>
-                        <div class="em-content">
-                            <strong>Client — Acme Corp</strong>
-                            <span data-fr="URGENT : Bug critique en production" data-en="URGENT: Critical production bug">URGENT : Bug critique en production</span>
-                        </div>
-                        <time>09:02</time>
-                    </div>
-                    <div class="demo-email" data-id="3">
-                        <span class="prio medium">🟡 <em data-fr="Moyen" data-en="Medium">Moyen</em></span>
-                        <div class="em-content">
-                            <strong data-fr="Thomas — Collègue" data-en="Thomas — Colleague">Thomas — Collègue</strong>
-                            <span data-fr="Update projet Alpha — review demandée" data-en="Project Alpha update — review requested">Update projet Alpha — review demandée</span>
-                        </div>
-                        <time>08:47</time>
-                    </div>
-                    <div class="demo-email" data-id="4">
-                        <span class="prio medium">🟡 <em data-fr="Moyen" data-en="Medium">Moyen</em></span>
-                        <div class="em-content">
-                            <strong data-fr="RH — Julie Martin" data-en="HR — Julie Martin">RH — Julie Martin</strong>
-                            <span data-fr="Formulaire télétravail à compléter" data-en="Remote work form to complete">Formulaire télétravail à compléter</span>
-                        </div>
-                        <time>08:15</time>
-                    </div>
-                    <div class="demo-email" data-id="5">
-                        <span class="prio low">🟢 <em data-fr="Faible" data-en="Low">Faible</em></span>
-                        <div class="em-content">
-                            <strong>LinkedIn</strong>
-                            <span data-fr="3 personnes ont consulté votre profil" data-en="3 people viewed your profile">3 personnes ont consulté votre profil</span>
-                        </div>
-                        <time>07:30</time>
-                    </div>
-                    <div class="demo-email" data-id="6">
-                        <span class="prio low">🟢 <em data-fr="Faible" data-en="Low">Faible</em></span>
-                        <div class="em-content">
-                            <strong data-fr="Newsletter — Design Weekly" data-en="Newsletter — Design Weekly">Newsletter — Design Weekly</strong>
-                            <span data-fr="Les 10 tendances UI de 2025" data-en="Top 10 UI trends of 2025">Les 10 tendances UI de 2025</span>
-                        </div>
-                        <time>07:00</time>
-                    </div>
+            <div class="hero-social reveal">
+                <div class="hero-social-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45D483" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <span data-fr="<strong>2,400+</strong> utilisateurs actifs" data-en="<strong>2,400+</strong> active users"><strong>2,400+</strong> utilisateurs actifs</span>
                 </div>
-                <!-- DETAIL PANEL -->
-                <div class="demo-detail" id="demoDetail">
-
-                    <!-- Empty state -->
-                    <div class="detail-empty" id="detailEmpty">
-                        <span>📬</span>
-                        <p data-fr="Sélectionne un email pour voir l'analyse" data-en="Select an email to see the analysis">Sélectionne un email pour voir l'analyse</p>
-                    </div>
-
-                    <!-- Mail 1 -->
-                    <div class="detail-view" data-view="1">
-                        <div class="dv-head">
-                            <div class="dv-avatar" style="background:#6C5CE7">MD</div>
-                            <div><strong>Marie Dupont</strong><span data-fr="Directrice — 09:14" data-en="Director — 09:14">Directrice — 09:14</span></div>
-                        </div>
-                        <h4 data-fr="Réunion budget déplacée à 14h" data-en="Budget meeting moved to 2pm">Réunion budget déplacée à 14h</h4>
-                        <div class="dv-body" data-fr="Bonjour,<br><br>La réunion budget initialement prévue à 10h est décalée à 14h. Merci de confirmer votre disponibilité.<br><br>Cordialement,<br>Marie Dupont" data-en="Hello,<br><br>The budget meeting originally scheduled at 10am has been moved to 2pm. Please confirm your availability.<br><br>Best regards,<br>Marie Dupont">Bonjour,<br><br>La réunion budget initialement prévue à 10h est décalée à 14h. Merci de confirmer votre disponibilité.<br><br>Cordialement,<br>Marie Dupont</div>
-                        <div class="mm-box">
-                            <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag urgent">Urgent</span></div>
-                            <div class="mm-info" data-fr="📅 Changement d'horaire détecté<br>👤 Expéditrice : Direction<br>⏱️ Réponse recommandée sous 30 min" data-en="📅 Schedule change detected<br>👤 Sender: Management<br>⏱️ Reply recommended within 30 min">📅 Changement d'horaire détecté<br>👤 Expéditrice : Direction<br>⏱️ Réponse recommandée sous 30 min</div>
-                            <button class="mm-btn" data-id="1" data-fr="⚡ Répondre avec MailMood" data-en="⚡ Reply with MailMood">⚡ Répondre avec MailMood</button>
-                            <div class="mm-reply" data-reply="1"></div>
-                        </div>
-                    </div>
-
-                    <!-- Mail 2 -->
-                    <div class="detail-view" data-view="2">
-                        <div class="dv-head">
-                            <div class="dv-avatar" style="background:#E17055">AC</div>
-                            <div><strong>Acme Corp</strong><span data-fr="Client — 09:02" data-en="Client — 09:02">Client — 09:02</span></div>
-                        </div>
-                        <h4 data-fr="URGENT : Bug critique en production" data-en="URGENT: Critical production bug">URGENT : Bug critique en production</h4>
-                        <div class="dv-body" data-fr="Bonjour,<br><br>Notre site est down depuis 8h45. Les utilisateurs ne peuvent plus accéder au dashboard. Merci d'intervenir au plus vite.<br><br>Support Acme Corp" data-en="Hello,<br><br>Our site has been down since 8:45am. Users can't access the dashboard. Please intervene ASAP.<br><br>Acme Corp Support">Bonjour,<br><br>Notre site est down depuis 8h45. Les utilisateurs ne peuvent plus accéder au dashboard. Merci d'intervenir au plus vite.<br><br>Support Acme Corp</div>
-                        <div class="mm-box">
-                            <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag urgent">Urgent</span></div>
-                            <div class="mm-info" data-fr="🚨 Mot-clé URGENT détecté<br>💼 Client premium<br>⚡ Temps de réponse critique" data-en="🚨 URGENT keyword detected<br>💼 Premium client<br>⚡ Critical response time">🚨 Mot-clé URGENT détecté<br>💼 Client premium<br>⚡ Temps de réponse critique</div>
-                            <button class="mm-btn" data-id="2" data-fr="⚡ Répondre avec MailMood" data-en="⚡ Reply with MailMood">⚡ Répondre avec MailMood</button>
-                            <div class="mm-reply" data-reply="2"></div>
-                        </div>
-                    </div>
-
-                    <!-- Mail 3 -->
-                    <div class="detail-view" data-view="3">
-                        <div class="dv-head">
-                            <div class="dv-avatar" style="background:#00B894">TH</div>
-                            <div><strong>Thomas</strong><span data-fr="Collègue — 08:47" data-en="Colleague — 08:47">Collègue — 08:47</span></div>
-                        </div>
-                        <h4 data-fr="Update projet Alpha — review demandée" data-en="Project Alpha update — review requested">Update projet Alpha — review demandée</h4>
-                        <div class="dv-body" data-fr="Salut,<br><br>J'ai pushé les dernières modifs sur la branche dev. Tu peux review quand tu as un moment ? Rien d'urgent mais ce serait bien avant vendredi.<br><br>Merci !<br>Thomas" data-en="Hey,<br><br>I pushed the latest changes on the dev branch. Can you review when you have a moment? Nothing urgent but ideally before Friday.<br><br>Thanks!<br>Thomas">Salut,<br><br>J'ai pushé les dernières modifs sur la branche dev. Tu peux review quand tu as un moment ? Rien d'urgent mais ce serait bien avant vendredi.<br><br>Merci !<br>Thomas</div>
-                        <div class="mm-box">
-                            <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag medium">Moyen</span></div>
-                            <div class="mm-info" data-fr="🔀 Code review demandée<br>📅 Deadline : vendredi<br>👤 Collègue direct" data-en="🔀 Code review requested<br>📅 Deadline: Friday<br>👤 Direct colleague">🔀 Code review demandée<br>📅 Deadline : vendredi<br>👤 Collègue direct</div>
-                            <button class="mm-btn" data-id="3" data-fr="⚡ Répondre avec MailMood" data-en="⚡ Reply with MailMood">⚡ Répondre avec MailMood</button>
-                            <div class="mm-reply" data-reply="3"></div>
-                        </div>
-                    </div>
-
-                    <!-- Mail 4 -->
-                    <div class="detail-view" data-view="4">
-                        <div class="dv-head">
-                            <div class="dv-avatar" style="background:#0984E3">JM</div>
-                            <div><strong>Julie Martin</strong><span data-fr="RH — 08:15" data-en="HR — 08:15">RH — 08:15</span></div>
-                        </div>
-                        <h4 data-fr="Formulaire télétravail à compléter" data-en="Remote work form to complete">Formulaire télétravail à compléter</h4>
-                        <div class="dv-body" data-fr="Bonjour,<br><br>Merci de compléter le formulaire de demande de télétravail avant la fin de semaine. Vous le trouverez en pièce jointe.<br><br>Cordialement,<br>Julie Martin — RH" data-en="Hello,<br><br>Please complete the remote work request form by end of week. You'll find it attached.<br><br>Best regards,<br>Julie Martin — HR">Bonjour,<br><br>Merci de compléter le formulaire de demande de télétravail avant la fin de semaine. Vous le trouverez en pièce jointe.<br><br>Cordialement,<br>Julie Martin — RH</div>
-                        <div class="mm-box">
-                            <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag medium">Moyen</span></div>
-                            <div class="mm-info" data-fr="📋 Formulaire à remplir<br>📅 Deadline : fin de semaine<br>📎 Pièce jointe détectée" data-en="📋 Form to fill<br>📅 Deadline: end of week<br>📎 Attachment detected">📋 Formulaire à remplir<br>📅 Deadline : fin de semaine<br>📎 Pièce jointe détectée</div>
-                            <button class="mm-btn" data-id="4" data-fr="⚡ Répondre avec MailMood" data-en="⚡ Reply with MailMood">⚡ Répondre avec MailMood</button>
-                            <div class="mm-reply" data-reply="4"></div>
-                        </div>
-                    </div>
-
-                    <!-- Mail 5 -->
-                    <div class="detail-view" data-view="5">
-                        <div class="dv-head">
-                            <div class="dv-avatar" style="background:#0077B5">IN</div>
-                            <div><strong>LinkedIn</strong><span>07:30</span></div>
-                        </div>
-                        <h4 data-fr="3 personnes ont consulté votre profil" data-en="3 people viewed your profile">3 personnes ont consulté votre profil</h4>
-                        <div class="dv-body" data-fr="Votre profil a été consulté par 3 personnes cette semaine, dont un recruteur chez Google...<br><br>Voir qui a consulté votre profil →" data-en="Your profile was viewed by 3 people this week, including a recruiter at Google...<br><br>See who viewed your profile →">Votre profil a été consulté par 3 personnes cette semaine, dont un recruteur chez Google...<br><br>Voir qui a consulté votre profil →</div>
-                        <div class="mm-box">
-                            <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag low" data-fr="Faible" data-en="Low">Faible</span></div>
-                            <div class="mm-info" data-fr="🔔 Notification automatique<br>🚫 Aucune action requise<br>📁 Suggestion : archiver" data-en="🔔 Automatic notification<br>🚫 No action needed<br>📁 Suggestion: archive">🔔 Notification automatique<br>🚫 Aucune action requise<br>📁 Suggestion : archiver</div>
-                            <button class="mm-btn" disabled style="opacity:.5;cursor:default" data-fr="Archiver automatiquement" data-en="Auto-archive">Archiver automatiquement</button>
-                            <div class="mm-reply" data-reply="5"></div>
-                        </div>
-                    </div>
-
-                    <!-- Mail 6 -->
-                    <div class="detail-view" data-view="6">
-                        <div class="dv-head">
-                            <div class="dv-avatar" style="background:#636e72">DW</div>
-                            <div><strong>Design Weekly</strong><span data-fr="Newsletter — 07:00" data-en="Newsletter — 07:00">Newsletter — 07:00</span></div>
-                        </div>
-                        <h4 data-fr="Les 10 tendances UI de 2025" data-en="Top 10 UI trends of 2025">Les 10 tendances UI de 2025</h4>
-                        <div class="dv-body" data-fr="Découvrez les tendances qui vont façonner le design cette année : glassmorphism, AI-driven UI, micro-interactions...<br><br>Lire l'article complet →" data-en="Discover the trends shaping design this year: glassmorphism, AI-driven UI, micro-interactions...<br><br>Read full article →">Découvrez les tendances qui vont façonner le design cette année : glassmorphism, AI-driven UI, micro-interactions...<br><br>Lire l'article complet →</div>
-                        <div class="mm-box">
-                            <div class="mm-head"><span>📧 MailMood</span><span class="mm-tag low" data-fr="Info" data-en="Info">Info</span></div>
-                            <div class="mm-info" data-fr="📰 Newsletter détectée<br>📌 Aucune action requise<br>🗂️ Archivage suggéré" data-en="📰 Newsletter detected<br>📌 No action required<br>🗂️ Archive suggested">📰 Newsletter détectée<br>📌 Aucune action requise<br>🗂️ Archivage suggéré</div>
-                            <button class="mm-btn" disabled style="opacity:.5;cursor:default" data-fr="📂 Archiver automatiquement" data-en="📂 Auto-archive">📂 Archiver automatiquement</button>
-                            <div class="mm-reply" data-reply="6"></div>
-                        </div>
-                    </div>
-
+                <div class="hero-social-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F0A050" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <span data-fr="<strong>4.9/5</strong> satisfaction" data-en="<strong>4.9/5</strong> satisfaction"><strong>4.9/5</strong> satisfaction</span>
                 </div>
-            </div>
-
-            <!-- Mobile: bouton retour -->
-            <button class="demo-back" id="demoBack" data-fr="← Retour à la liste" data-en="← Back to list">← Retour à la liste</button>
-        </div>
-    </div>
-</section>
-
-<!-- ========== HOW IT WORKS ========== -->
-<section class="how" id="how">
-    <div class="container">
-        <div class="section-head">
-            <span class="tag" data-fr="Comment ça marche" data-en="How it works">Comment ça marche</span>
-            <h2 data-fr="3 étapes. 30 secondes." data-en="3 steps. 30 seconds.">3 étapes. 30 secondes.</h2>
-        </div>
-        <div class="steps">
-            <div class="step reveal">
-                <div class="step-num">1</div>
-                <h3 data-fr="Installe l'extension" data-en="Install the extension">Installe l'extension</h3>
-                <p data-fr="Un clic depuis le Chrome Web Store. Rien à configurer." data-en="One click from the Chrome Web Store. Nothing to configure.">Un clic depuis le Chrome Web Store. Rien à configurer.</p>
-            </div>
-            <div class="step reveal">
-                <div class="step-num">2</div>
-                <h3 data-fr="Ouvre ta boîte mail" data-en="Open your inbox">Ouvre ta boîte mail</h3>
-                <p data-fr="MailMood analyse et trie tes emails automatiquement par priorité." data-en="MailMood analyzes and sorts your emails automatically by priority.">MailMood analyse et trie tes emails automatiquement par priorité.</p>
-            </div>
-            <div class="step reveal">
-                <div class="step-num">3</div>
-                <h3 data-fr="Réponds en un clic" data-en="Reply in one click">Réponds en un clic</h3>
-                <p data-fr="Valide la réponse IA ou modifie-la. Envoie. C'est fait." data-en="Validate the AI reply or edit it. Send. Done.">Valide la réponse IA ou modifie-la. Envoie. C'est fait.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ========== PRICING ========== -->
-<section class="pricing" id="pricing">
-    <div class="container">
-        <div class="section-head">
-            <span class="tag" data-fr="Tarifs" data-en="Pricing">Tarifs</span>
-            <h2 data-fr="Simple. Transparent. Honnête." data-en="Simple. Transparent. Honest.">Simple. Transparent. Honnête.</h2>
-        </div>
-        <div class="plans">
-            <!-- Free -->
-            <div class="plan reveal">
-                <h3 data-fr="Gratuit" data-en="Free">Gratuit</h3>
-                <div class="plan-price"><em>0€</em><span data-fr="/mois" data-en="/mo">/mois</span></div>
-                <ul>
-                    <li data-fr="✓ 50 emails/jour" data-en="✓ 50 emails/day">✓ 50 emails/jour</li>
-                    <li data-fr="✓ Tri intelligent" data-en="✓ Smart sorting">✓ Tri intelligent</li>
-                    <li data-fr="✓ 5 réponses IA/jour" data-en="✓ 5 AI replies/day">✓ 5 réponses IA/jour</li>
-                    <li data-fr="✓ 100% local" data-en="✓ 100% local">✓ 100% local</li>
-                </ul>
-                <a href="#" class="btn btn-ghost" data-fr="Commencer" data-en="Get started">Commencer</a>
-            </div>
-            <!-- Pro -->
-            <div class="plan popular reveal">
-                <div class="plan-badge" data-fr="⭐ Populaire" data-en="⭐ Popular">⭐ Populaire</div>
-                <h3>Pro</h3>
-                <div class="plan-price"><em>9€</em><span data-fr="/mois" data-en="/mo">/mois</span></div>
-                <ul>
-                    <li data-fr="✓ Emails illimités" data-en="✓ Unlimited emails">✓ Emails illimités</li>
-                    <li data-fr="✓ Réponses IA illimitées" data-en="✓ Unlimited AI replies">✓ Réponses IA illimitées</li>
-                    <li data-fr="✓ Tons personnalisables" data-en="✓ Customizable tones">✓ Tons personnalisables</li>
-                    <li data-fr="✓ Support prioritaire" data-en="✓ Priority support">✓ Support prioritaire</li>
-                </ul>
-                <a href="#" class="btn btn-primary" data-fr="Essai gratuit 14 jours" data-en="Free 14-day trial">Essai gratuit 14 jours</a>
-            </div>
-            <!-- Team -->
-            <div class="plan reveal">
-                <h3 data-fr="Équipe" data-en="Team">Équipe</h3>
-                <div class="plan-price"><em>29€</em><span data-fr="/mois/utilisateur" data-en="/mo/user">/mois/utilisateur</span></div>
-                <ul>
-                    <li data-fr="✓ Tout Pro inclus" data-en="✓ Everything in Pro">✓ Tout Pro inclus</li>
-                    <li data-fr="✓ Dashboard équipe" data-en="✓ Team dashboard">✓ Dashboard équipe</li>
-                    <li data-fr="✓ Templates partagés" data-en="✓ Shared templates">✓ Templates partagés</li>
-                    <li data-fr="✓ Admin & analytics" data-en="✓ Admin & analytics">✓ Admin & analytics</li>
-                </ul>
-                <a href="#" class="btn btn-ghost" data-fr="Contacter" data-en="Contact us">Contacter</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ========== TÉMOIGNAGES ========== -->
-<section class="testimonials">
-    <div class="container">
-        <div class="section-head">
-            <span class="tag" data-fr="Témoignages" data-en="Testimonials">Témoignages</span>
-            <h2 data-fr="Ce qu'ils en disent" data-en="What they say">Ce qu'ils en disent</h2>
-        </div>
-        <div class="testi-grid">
-            <div class="testi reveal">
-                <p data-fr="\"Je gagne 25 minutes chaque matin. MailMood a changé ma routine email.\"" data-en="\"I save 25 minutes every morning. MailMood changed my email routine.\"">"Je gagne 25 minutes chaque matin. MailMood a changé ma routine email."</p>
-                <div class="testi-author">
-                    <div class="testi-avatar" style="background:#6C5CE7">SL</div>
-                    <div><strong>Sophie L.</strong><span data-fr="Product Manager" data-en="Product Manager">Product Manager</span></div>
-                </div>
-            </div>
-            <div class="testi reveal">
-                <p data-fr="\"La réponse IA est bluffante. 90% du temps je valide sans modifier.\"" data-en="\"The AI reply is amazing. 90% of the time I validate without editing.\"">"La réponse IA est bluffante. 90% du temps je valide sans modifier."</p>
-                <div class="testi-author">
-                    <div class="testi-avatar" style="background:#00B894">MR</div>
-                    <div><strong>Marc R.</strong><span data-fr="Freelance Dev" data-en="Freelance Dev">Freelance Dev</span></div>
-                </div>
-            </div>
-            <div class="testi reveal">
-                <p data-fr="\"Enfin une app qui respecte ma vie privée. Tout est local, c'est rassurant.\"" data-en="\"Finally an app that respects my privacy. Everything is local, it's reassuring.\"">"Enfin une app qui respecte ma vie privée. Tout est local, c'est rassurant."</p>
-                <div class="testi-author">
-                    <div class="testi-avatar" style="background:#E17055">CK</div>
-                    <div><strong>Clara K.</strong><span data-fr="Avocate" data-en="Lawyer">Avocate</span></div>
+                <div class="hero-social-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#786BFF" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <span data-fr="<strong>100%</strong> confidentiel" data-en="<strong>100%</strong> confidential"><strong>100%</strong> confidentiel</span>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-<!-- ========== FAQ ========== -->
-<section class="faq" id="faq">
-    <div class="container">
-        <div class="section-head">
-            <span class="tag">FAQ</span>
-            <h2 data-fr="Questions fréquentes" data-en="Frequently asked questions">Questions fréquentes</h2>
-        </div>
-        <div class="faq-list">
-            <div class="faq-item reveal">
-                <button class="faq-q" data-fr="Est-ce que mes emails sont envoyés sur un serveur ?" data-en="Are my emails sent to a server?">Est-ce que mes emails sont envoyés sur un serveur ?</button>
-                <div class="faq-a"><p data-fr="Non. Tout le traitement se fait localement dans votre navigateur. Aucune donnée ne quitte votre machine. Jamais." data-en="No. All processing happens locally in your browser. No data ever leaves your machine. Ever.">Non. Tout le traitement se fait localement dans votre navigateur. Aucune donnée ne quitte votre machine. Jamais.</p></div>
-            </div>
-            <div class="faq-item reveal">
-                <button class="faq-q" data-fr="Ça marche avec quels services mail ?" data-en="Which email services does it work with?">Ça marche avec quels services mail ?</button>
-                <div class="faq-a"><p data-fr="Actuellement Gmail. Outlook et Apple Mail sont en cours de développement et arrivent très bientôt." data-en="Currently Gmail. Outlook and Apple Mail are in development and coming very soon.">Actuellement Gmail. Outlook et Apple Mail sont en cours de développement et arrivent très bientôt.</p></div>
-            </div>
-            <div class="faq-item reveal">
-                <button class="faq-q" data-fr="La version gratuite est-elle limitée ?" data-en="Is the free version limited?">La version gratuite est-elle limitée ?</button>
-                <div class="faq-a"><p data-fr="Elle inclut le tri intelligent pour 50 emails/jour et 5 réponses IA. Largement suffisant pour un usage personnel." data-en="It includes smart sorting for 50 emails/day and 5 AI replies. More than enough for personal use.">Elle inclut le tri intelligent pour 50 emails/jour et 5 réponses IA. Largement suffisant pour un usage personnel.</p></div>
-            </div>
-            <div class="faq-item reveal">
-                <button class="faq-q" data-fr="Je peux annuler mon abonnement ?" data-en="Can I cancel my subscription?">Je peux annuler mon abonnement ?</button>
-                <div class="faq-a"><p data-fr="Oui, à tout moment en un clic depuis votre espace. Aucun engagement, aucuns frais cachés." data-en="Yes, anytime with one click from your dashboard. No commitment, no hidden fees.">Oui, à tout moment en un clic depuis votre espace. Aucun engagement, aucuns frais cachés.</p></div>
-            </div>
-            <div class="faq-item reveal">
-                <button class="faq-q" data-fr="C'est quoi le modèle IA utilisé ?" data-en="What AI model is used?">C'est quoi le modèle IA utilisé ?</button>
-                <div class="faq-a"><p data-fr="Nous utilisons un modèle léger optimisé pour tourner localement dans votre navigateur via WebAssembly. Aucun appel API externe." data-en="We use a lightweight model optimized to run locally in your browser via WebAssembly. No external API calls.">Nous utilisons un modèle léger optimisé pour tourner localement dans votre navigateur via WebAssembly. Aucun appel API externe.</p></div>
-            </div>
-            <div class="faq-item reveal">
-                <button class="faq-q" data-fr="MailMood peut-il envoyer des emails à ma place ?" data-en="Can MailMood send emails on my behalf?">MailMood peut-il envoyer des emails à ma place ?</button>
-                <div class="faq-a"><p data-fr="Non. MailMood génère une suggestion de réponse. Vous restez maître : vous validez, modifiez ou ignorez avant tout envoi." data-en="No. MailMood generates a reply suggestion. You stay in control: you validate, edit or ignore before any send.">Non. MailMood génère une suggestion de réponse. Vous restez maître : vous validez, modifiez ou ignorez avant tout envoi.</p></div>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
 
-<!-- ========== CTA FINAL ========== -->
-<section class="final-cta">
-    <div class="container">
-        <h2 class="reveal" data-fr="Prêt à reprendre le contrôle ?" data-en="Ready to take back control?">Prêt à reprendre le contrôle ?</h2>
-        <p class="reveal" data-fr="Installe MailMood en 30 secondes. Gratuit, privé, efficace." data-en="Install MailMood in 30 seconds. Free, private, efficient.">Installe MailMood en 30 secondes. Gratuit, privé, efficace.</p>
-        <a href="#pricing" class="btn btn-primary btn-lg reveal" data-fr="Installer gratuitement" data-en="Install for free">Installer gratuitement</a>
-    </div>
-</section>
+    <!-- ========== SOCIAL PROOF BAR ========== -->
+    <section class="social-bar reveal">
+        <p data-fr="Ils nous font confiance" data-en="Trusted by leading teams">Ils nous font confiance</p>
+        <div class="social-logos">
+            <span>Google</span>
+            <span>Stripe</span>
+            <span>Shopify</span>
+            <span>Notion</span>
+            <span>Linear</span>
+            <span>Vercel</span>
+        </div>
+    </section>
 
-<!-- ========== FOOTER ========== -->
-<footer class="footer">
-    <div class="container">
+    <!-- ========== FEATURES ========== -->
+    <section class="features" id="features">
+        <div class="section-header reveal">
+            <p class="section-label" data-fr="Fonctionnalités" data-en="Features">Fonctionnalités</p>
+            <h2 class="section-title" data-fr="Tout ce qu'il faut pour maîtriser vos emails" data-en="Everything you need to master your emails">Tout ce qu'il faut pour maîtriser vos emails</h2>
+            <p class="section-desc" data-fr="MailMood combine l'analyse émotionnelle, la génération de réponses et la priorisation intelligente dans une interface fluide." data-en="MailMood combines emotional analysis, reply generation, and smart prioritization in a seamless interface.">
+                MailMood combine l'analyse émotionnelle, la génération de réponses et la priorisation intelligente dans une interface fluide.
+            </p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card reveal">
+                <div class="feature-icon purple">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#786BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                </div>
+                <h3 data-fr="Analyse du ton" data-en="Tone Analysis">Analyse du ton</h3>
+                <p data-fr="Détecte instantanément si un email est positif, neutre, urgent ou agressif grâce à notre IA propriétaire." data-en="Instantly detects if an email is positive, neutral, urgent, or aggressive using our proprietary AI.">
+                    Détecte instantanément si un email est positif, neutre, urgent ou agressif grâce à notre IA propriétaire.
+                </p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#45D483" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10"/></svg>
+                </div>
+                <h3 data-fr="Réponse en 1 clic" data-en="One-Click Reply">Réponse en 1 clic</h3>
+                <p data-fr="Génère une réponse adaptée au ton détecté. Professionnelle, empathique ou assertive — vous choisissez." data-en="Generates a reply adapted to the detected tone. Professional, empathetic, or assertive — you choose.">
+                    Génère une réponse adaptée au ton détecté. Professionnelle, empathique ou assertive — vous choisissez.
+                </p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon orange">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F0A050" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                </div>
+                <h3 data-fr="Score de priorité" data-en="Priority Score">Score de priorité</h3>
+                <p data-fr="Chaque email reçoit un score de 1 à 10 basé sur l'urgence, le ton et l'importance de l'expéditeur." data-en="Each email receives a score from 1 to 10 based on urgency, tone, and sender importance.">
+                    Chaque email reçoit un score de 1 à 10 basé sur l'urgence, le ton et l'importance de l'expéditeur.
+                </p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon purple">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#786BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <h3 data-fr="Confidentialité totale" data-en="Total Privacy">Confidentialité totale</h3>
+                <p data-fr="Vos emails restent les vôtres. Aucune donnée stockée, aucun partage. Chiffrement de bout en bout." data-en="Your emails remain yours. No data stored, no sharing. End-to-end encryption.">
+                    Vos emails restent les vôtres. Aucune donnée stockée, aucun partage. Chiffrement de bout en bout.
+                </p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#45D483" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <h3 data-fr="Intégration Gmail & Outlook" data-en="Gmail & Outlook Integration">Intégration Gmail & Outlook</h3>
+                <p data-fr="Se connecte à votre boîte en 30 secondes. Aucune installation, tout fonctionne dans le navigateur." data-en="Connects to your inbox in 30 seconds. No installation, everything works in the browser.">
+                    Se connecte à votre boîte en 30 secondes. Aucune installation, tout fonctionne dans le navigateur.
+                </p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon orange">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F0A050" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h3 data-fr="Dashboard analytique" data-en="Analytics Dashboard">Dashboard analytique</h3>
+                <p data-fr="Visualisez les tendances émotionnelles de vos échanges. Identifiez les relations qui nécessitent attention." data-en="Visualize emotional trends in your exchanges. Identify relationships that need attention.">
+                    Visualisez les tendances émotionnelles de vos échanges. Identifiez les relations qui nécessitent attention.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SHOWCASE / BENTO ========== -->
+    <section class="showcase">
+        <div class="section-header reveal">
+            <p class="section-label" data-fr="En action" data-en="In action">En action</p>
+            <h2 class="section-title" data-fr="Une interface pensée pour la vitesse" data-en="An interface designed for speed">Une interface pensée pour la vitesse</h2>
+        </div>
+        <div class="bento-grid reveal">
+            <div class="bento-card bento-large">
+                <div class="bento-label" data-fr="Analyse en temps réel" data-en="Real-time analysis">Analyse en temps réel</div>
+                <div class="bento-demo-inbox">
+                    <div class="bento-email-item">
+                        <div class="bento-email-avatar" style="background:#EF6363;">J</div>
+                        <div class="bento-email-content">
+                            <div class="bento-email-sender">Jean Dupont</div>
+                            <div class="bento-email-subject" data-fr="Urgent — Livraison en retard" data-en="Urgent — Delayed delivery">Urgent — Livraison en retard</div>
+                        </div>
+                        <div class="bento-email-tone tone-red" data-fr="Frustré" data-en="Frustrated">Frustré</div>
+                    </div>
+                    <div class="bento-email-item">
+                        <div class="bento-email-avatar" style="background:#45D483;">M</div>
+                        <div class="bento-email-content">
+                            <div class="bento-email-sender">Marie Claire</div>
+                            <div class="bento-email-subject" data-fr="Merci pour votre aide !" data-en="Thanks for your help!">Merci pour votre aide !</div>
+                        </div>
+                        <div class="bento-email-tone tone-green" data-fr="Positif" data-en="Positive">Positif</div>
+                    </div>
+                    <div class="bento-email-item">
+                        <div class="bento-email-avatar" style="background:#F0A050;">P</div>
+                        <div class="bento-email-content">
+                            <div class="bento-email-sender">Pierre Martin</div>
+                            <div class="bento-email-subject" data-fr="Réunion demain à 14h" data-en="Meeting tomorrow at 2pm">Réunion demain à 14h</div>
+                        </div>
+                        <div class="bento-email-tone tone-neutral" data-fr="Neutre" data-en="Neutral">Neutre</div>
+                    </div>
+                    <div class="bento-email-item">
+                        <div class="bento-email-avatar" style="background:#786BFF;">S</div>
+                        <div class="bento-email-content">
+                            <div class="bento-email-sender">Sophie Laurent</div>
+                            <div class="bento-email-subject" data-fr="Proposition de partenariat" data-en="Partnership proposal">Proposition de partenariat</div>
+                        </div>
+                        <div class="bento-email-tone tone-purple" data-fr="Enthousiaste" data-en="Enthusiastic">Enthousiaste</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bento-card bento-small">
+                <div class="bento-label" data-fr="Score de priorité" data-en="Priority score">Score de priorité</div>
+                <div class="bento-score">
+                    <div class="score-ring">
+                        <svg viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="50" stroke="#222228" stroke-width="8" fill="none"/>
+                            <circle cx="60" cy="60" r="50" stroke="#786BFF" stroke-width="8" fill="none" stroke-dasharray="314" stroke-dashoffset="63" stroke-linecap="round" class="score-ring-progress"/>
+                        </svg>
+                        <div class="score-value">8.2</div>
+                    </div>
+                    <p class="score-desc" data-fr="Priorité haute — Répondre dans l'heure" data-en="High priority — Reply within the hour">Priorité haute — Répondre dans l'heure</p>
+                </div>
+            </div>
+            <div class="bento-card bento-small">
+                <div class="bento-label" data-fr="Réponse générée" data-en="Generated reply">Réponse générée</div>
+                <div class="bento-reply">
+                    <div class="bento-reply-text typing-animation" data-fr="Bonjour Jean, je comprends votre frustration concernant le retard de livraison. Je viens de vérifier le suivi et votre colis sera livré demain avant 12h. Je m'excuse pour ce désagrément." data-en="Hello Jean, I understand your frustration regarding the delivery delay. I just checked the tracking and your package will be delivered tomorrow before noon. I apologize for the inconvenience.">
+                        Bonjour Jean, je comprends votre frustration concernant le retard de livraison. Je viens de vérifier le suivi et votre colis sera livré demain avant 12h. Je m'excuse pour ce désagrément.
+                    </div>
+                    <div class="bento-reply-actions">
+                        <button class="bento-btn-send" data-fr="Envoyer" data-en="Send">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                            Envoyer
+                        </button>
+                        <button class="bento-btn-edit" data-fr="Modifier" data-en="Edit">Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== HOW IT WORKS ========== -->
+    <section class="how-it-works">
+        <div class="section-header reveal">
+            <p class="section-label" data-fr="Comment ça marche" data-en="How it works">Comment ça marche</p>
+            <h2 class="section-title" data-fr="3 étapes, 30 secondes" data-en="3 steps, 30 seconds">3 étapes, 30 secondes</h2>
+        </div>
+        <div class="steps reveal">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 data-fr="Connectez votre boîte" data-en="Connect your inbox">Connectez votre boîte</h3>
+                <p data-fr="Gmail, Outlook ou tout fournisseur IMAP. Authentification sécurisée OAuth." data-en="Gmail, Outlook or any IMAP provider. Secure OAuth authentication.">
+                    Gmail, Outlook ou tout fournisseur IMAP. Authentification sécurisée OAuth.
+                </p>
+            </div>
+            <div class="step-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5C5C63" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 data-fr="L'IA analyse vos emails" data-en="AI analyzes your emails">L'IA analyse vos emails</h3>
+                <p data-fr="Chaque message reçoit un score de ton, une priorité et des suggestions de réponse." data-en="Each message gets a tone score, priority, and reply suggestions.">
+                    Chaque message reçoit un score de ton, une priorité et des suggestions de réponse.
+                </p>
+            </div>
+            <div class="step-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5C5C63" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 data-fr="Répondez en 1 clic" data-en="Reply in 1 click">Répondez en 1 clic</h3>
+                <p data-fr="Validez la réponse générée ou personnalisez-la. Envoi direct depuis MailMood." data-en="Validate the generated reply or customize it. Send directly from MailMood.">
+                    Validez la réponse générée ou personnalisez-la. Envoi direct depuis MailMood.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TESTIMONIALS ========== -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header reveal">
+            <p class="section-label" data-fr="Témoignages" data-en="Testimonials">Témoignages</p>
+            <h2 class="section-title" data-fr="Ce qu'en disent nos utilisateurs" data-en="What our users say">Ce qu'en disent nos utilisateurs</h2>
+        </div>
+        <div class="testimonials-grid reveal">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text" data-fr="MailMood a transformé ma gestion d'emails. Je détecte instantanément les messages urgents et je réponds 3x plus vite. Indispensable." data-en="MailMood transformed my email management. I instantly detect urgent messages and reply 3x faster. Essential.">
+                    MailMood a transformé ma gestion d'emails. Je détecte instantanément les messages urgents et je réponds 3x plus vite. Indispensable.
+                </p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" style="background:#786BFF;">A</div>
+                    <div>
+                        <div class="testimonial-name">Alice Bernard</div>
+                        <div class="testimonial-role" data-fr="Directrice Marketing, TechCorp" data-en="Marketing Director, TechCorp">Directrice Marketing, TechCorp</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text" data-fr="L'analyse du ton est bluffante de précision. Mon équipe support a réduit son temps de réponse de 60%. Le ROI est immédiat." data-en="The tone analysis is stunningly accurate. My support team reduced response time by 60%. Immediate ROI.">
+                    L'analyse du ton est bluffante de précision. Mon équipe support a réduit son temps de réponse de 60%. Le ROI est immédiat.
+                </p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" style="background:#45D483;">T</div>
+                    <div>
+                        <div class="testimonial-name">Thomas Leroy</div>
+                        <div class="testimonial-role" data-fr="Head of Support, ScaleUp" data-en="Head of Support, ScaleUp">Head of Support, ScaleUp</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text" data-fr="Je gère 200+ emails par jour. MailMood me fait gagner 2 heures quotidiennes. L'interface est magnifique et la confidentialité est au top." data-en="I manage 200+ emails daily. MailMood saves me 2 hours a day. The interface is beautiful and privacy is top-notch.">
+                    Je gère 200+ emails par jour. MailMood me fait gagner 2 heures quotidiennes. L'interface est magnifique et la confidentialité est au top.
+                </p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" style="background:#F0A050;">L</div>
+                    <div>
+                        <div class="testimonial-name">Laura Petit</div>
+                        <div class="testimonial-role" data-fr="CEO, DigitalFirst" data-en="CEO, DigitalFirst">CEO, DigitalFirst</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== STATS BAR ========== -->
+    <section class="stats-bar reveal">
+        <div class="stat">
+            <div class="stat-value" data-count="2400">0</div>
+            <div class="stat-label" data-fr="Utilisateurs actifs" data-en="Active users">Utilisateurs actifs</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <div class="stat-value" data-count="1200000">0</div>
+            <div class="stat-label" data-fr="Emails analysés" data-en="Emails analyzed">Emails analysés</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <div class="stat-value" data-count="98">0</div>
+            <div class="stat-label" data-fr="% de précision" data-en="% accuracy">% de précision</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <div class="stat-value" data-count="60">0</div>
+            <div class="stat-label" data-fr="% de temps gagné" data-en="% time saved">% de temps gagné</div>
+        </div>
+    </section>
+
+    <!-- ========== CTA SECTION ========== -->
+    <section class="cta-section" id="contact">
+        <div class="cta-box reveal">
+            <div class="cta-glow"></div>
+            <h2 data-fr="Prêt à transformer votre boîte mail ?" data-en="Ready to transform your inbox?">Prêt à transformer votre boîte mail ?</h2>
+            <p data-fr="Commencez gratuitement. Aucune carte bancaire requise. Configurez en 30 secondes." data-en="Start for free. No credit card required. Set up in 30 seconds.">
+                Commencez gratuitement. Aucune carte bancaire requise. Configurez en 30 secondes.
+            </p>
+            <div class="cta-buttons">
+                <a href="demo.html" class="btn-hero-primary">
+                    <span data-fr="Essayer gratuitement" data-en="Try for free">Essayer gratuitement</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+                <a href="pricing.html" class="btn-hero-secondary">
+                    <span data-fr="Voir les tarifs" data-en="See pricing">Voir les tarifs</span>
+                </a>
+            </div>
+            <div class="cta-trust">
+                <span data-fr="🔒 Chiffrement bout en bout" data-en="🔒 End-to-end encryption">🔒 Chiffrement bout en bout</span>
+                <span data-fr="⚡ Actif en 30 secondes" data-en="⚡ Active in 30 seconds">⚡ Actif en 30 secondes</span>
+                <span data-fr="💳 Sans carte bancaire" data-en="💳 No credit card">💳 Sans carte bancaire</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
         <div class="footer-top">
             <div class="footer-brand">
-                <span class="logo-icon">📧</span>
-                <span class="logo-text">MailMood</span>
-                <p data-fr="Ta boîte mail. Sans le bruit." data-en="Your inbox. Without the noise.">Ta boîte mail. Sans le bruit.</p>
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+                            <rect width="32" height="32" rx="8" fill="#786BFF"/>
+                            <path d="M8 12L16 8L24 12V20L16 24L8 20V12Z" stroke="#fff" stroke-width="2" fill="none"/>
+                            <circle cx="16" cy="16" r="3" fill="#fff"/>
+                        </svg>
+                    </div>
+                    <span>MailMood</span>
+                </a>
+                <p class="footer-tagline" data-fr="L'IA qui comprend vos emails." data-en="The AI that understands your emails.">L'IA qui comprend vos emails.</p>
             </div>
-            <div class="footer-links">
-                <div>
+            <div class="footer-columns">
+                <div class="footer-col">
                     <h4 data-fr="Produit" data-en="Product">Produit</h4>
-                    <a href="#benefits" data-fr="Avantages" data-en="Benefits">Avantages</a>
-                    <a href="#demo" data-fr="Démo" data-en="Demo">Démo</a>
-                    <a href="#pricing" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
+                    <a href="#features" data-fr="Fonctionnalités" data-en="Features">Fonctionnalités</a>
+                    <a href="pricing.html" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
+                    <a href="demo.html" data-fr="Démo" data-en="Demo">Démo</a>
+                    <a href="#" data-fr="Changelog" data-en="Changelog">Changelog</a>
                 </div>
-                <div>
-                    <h4 data-fr="Support" data-en="Support">Support</h4>
-                    <a href="#faq" data-fr="FAQ" data-en="FAQ">FAQ</a>
-                    <a href="mailto:mailmoodsupport@gmail.com" data-fr="Contact" data-en="Contact">Contact</a>
+                <div class="footer-col">
+                    <h4 data-fr="Entreprise" data-en="Company">Entreprise</h4>
+                    <a href="#" data-fr="À propos" data-en="About">À propos</a>
+                    <a href="#" data-fr="Blog" data-en="Blog">Blog</a>
+                    <a href="#" data-fr="Carrières" data-en="Careers">Carrières</a>
+                    <a href="#contact" data-fr="Contact" data-en="Contact">Contact</a>
                 </div>
-                <div>
+                <div class="footer-col">
                     <h4 data-fr="Légal" data-en="Legal">Légal</h4>
-                    <a href="mentions-legales.html" data-fr="Mentions légales" data-en="Legal notices">Mentions légales</a>
-                    <a href="confidentialite.html" data-fr="Confidentialité" data-en="Privacy policy">Confidentialité</a>
+                    <a href="privacy.html" data-fr="Confidentialité" data-en="Privacy">Confidentialité</a>
+                    <a href="legal.html" data-fr="Mentions légales" data-en="Legal">Mentions légales</a>
+                    <a href="#" data-fr="CGU" data-en="Terms">CGU</a>
+                    <a href="#" data-fr="RGPD" data-en="GDPR">RGPD</a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 XMAILMOOD. <span data-fr="Tous droits réservés." data-en="All rights reserved.">Tous droits réservés.</span></p>
+            <p>© 2025 MailMood. <span data-fr="Tous droits réservés." data-en="All rights reserved.">Tous droits réservés.</span></p>
+            <div class="footer-social">
+                <a href="#" aria-label="Twitter">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="#" aria-label="LinkedIn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <a href="#" aria-label="GitHub">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                </a>
+            </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
-<script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
