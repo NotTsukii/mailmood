@@ -1,181 +1,100 @@
-/* ================================
-   MAILMOOD — app.js
-   VERSION CORRIGÉE
-   ================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ========== THEME TOGGLE ==========
-    const html = document.documentElement;
-    const themeToggle = document.getElementById('themeToggle');
-    const themeToggleM = document.getElementById('themeToggleM');
+    // ========== MOBILE MENU ==========
+    const mobileBtn = document.querySelector('.mobile-menu-btn');
+    const mobileNav = document.querySelector('.mobile-nav');
 
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    html.setAttribute('data-theme', savedTheme);
-
-    function toggleTheme() {
-        const current = html.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-        if (themeToggleM) {
-            themeToggleM.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
-        }
-    }
-
-    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-    if (themeToggleM) {
-        themeToggleM.textContent = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
-        themeToggleM.addEventListener('click', toggleTheme);
-    }
-
-    // ========== LANGUAGE TOGGLE ==========
-    const langToggle = document.getElementById('langToggle');
-    const langToggleM = document.getElementById('langToggleM');
-    const savedLang = localStorage.getItem('lang') || 'fr';
-    html.setAttribute('data-lang', savedLang);
-
-    function applyLang(lang) {
-        document.querySelectorAll('[data-fr]').forEach(el => {
-            const value = el.getAttribute(`data-${lang}`) || el.getAttribute('data-fr');
-            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                el.placeholder = value;
-            } else if (value.includes('<')) {
-                el.innerHTML = value;
-            } else {
-                el.textContent = value;
-            }
-        });
-        if (langToggle) langToggle.textContent = lang === 'fr' ? 'EN' : 'FR';
-        if (langToggleM) langToggleM.textContent = lang === 'fr' ? '🇬🇧 EN' : '🇫🇷 FR';
-    }
-
-    function toggleLang() {
-        const current = html.getAttribute('data-lang');
-        const next = current === 'fr' ? 'en' : 'fr';
-        html.setAttribute('data-lang', next);
-        localStorage.setItem('lang', next);
-        applyLang(next);
-    }
-
-    applyLang(savedLang);
-    if (langToggle) langToggle.addEventListener('click', toggleLang);
-    if (langToggleM) langToggleM.addEventListener('click', toggleLang);
-
-    // ========== BURGER MENU ==========
-    const burger = document.getElementById('burger');
-    const mobileNav = document.getElementById('mobileNav');
-
-    if (burger && mobileNav) {
-        burger.addEventListener('click', () => {
-            burger.classList.toggle('active');
-            mobileNav.classList.toggle('open');
-            document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+    if (mobileBtn && mobileNav) {
+        mobileBtn.addEventListener('click', () => {
+            mobileBtn.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+            document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
         });
 
         mobileNav.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                burger.classList.remove('active');
-                mobileNav.classList.remove('open');
+                mobileBtn.classList.remove('active');
+                mobileNav.classList.remove('active');
                 document.body.style.overflow = '';
             });
         });
     }
 
-    // ========== NAVBAR SCROLL ==========
-    const navbar = document.getElementById('navbar');
+    // ========== LANGUAGE TOGGLE ==========
+    const currentLang = { value: 'fr' };
 
-    window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
-        if (scrollY > 100) {
-            navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
-        } else {
-            navbar.style.boxShadow = 'none';
-        }
-    }, { passive: true });
+    function setLang(lang) {
+        currentLang.value = lang;
 
-    // ========== REVEAL ON SCROLL ==========
-    const reveals = document.querySelectorAll('.reveal');
-
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                revealObserver.unobserve(entry.target);
-            }
+        // Update all lang buttons
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lang === lang);
         });
-    }, { threshold: 0.1 });
 
-    reveals.forEach(el => revealObserver.observe(el));
+        // Update all translatable elements
+        document.querySelectorAll('[data-fr][data-en]').forEach(el => {
+            el.textContent = el.dataset[lang];
+        });
 
-    // ========== DEMO INTERACTIVE ==========
-    const emailItems = document.querySelectorAll('.email-item');
-    const detailPanel = document.querySelector('.demo-detail');
-    const detailCards = document.querySelectorAll('.detail-card');
-    const backBtn = document.querySelector('.back-btn');
-
-    function isMobile() {
-        return window.innerWidth < 768;
+        // Store preference
+        localStorage.setItem('mailmood-lang', lang);
     }
 
-    function selectEmail(id) {
-        // Highlight email dans la liste
-        emailItems.forEach(item => item.classList.remove('active'));
-        const activeItem = document.querySelector(`.email-item[data-id="${id}"]`);
-        if (activeItem) activeItem.classList.add('active');
+    // Init lang from localStorage
+    const savedLang = localStorage.getItem('mailmood-lang') || 'fr';
+    setLang(savedLang);
 
-        // Afficher le bon detail card
-        detailCards.forEach(card => {
-            card.classList.remove('active');
-            card.style.display = 'none';
-        });
-        const activeCard = document.querySelector(`.detail-card[data-id="${id}"]`);
-        if (activeCard) {
-            activeCard.style.display = 'block';
-            setTimeout(() => activeCard.classList.add('active'), 10);
-        }
-
-        // Sur mobile, afficher le panneau détail
-        if (isMobile() && detailPanel) {
-            detailPanel.classList.add('mobile-open');
-        }
-
-        // Effet typing sur le résumé IA
-        if (activeCard) {
-            const typingEl = activeCard.querySelector('.ai-summary');
-            if (typingEl) {
-                const fullText = typingEl.getAttribute('data-full') || typingEl.textContent;
-                if (!typingEl.getAttribute('data-full')) {
-                    typingEl.setAttribute('data-full', typingEl.textContent);
-                }
-                typingEl.textContent = '';
-                let i = 0;
-                function typeChar() {
-                    if (i < fullText.length) {
-                        typingEl.textContent += fullText[i];
-                        i++;
-                        setTimeout(typeChar, 12);
-                    }
-                }
-                typeChar();
-            }
-        }
-    }
-
-    // Click sur chaque email
-    emailItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const id = item.getAttribute('data-id');
-            selectEmail(id);
-        });
+    // Bind lang buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => setLang(btn.dataset.lang));
     });
 
-    // Bouton retour mobile
-    if (backBtn) {
-        backBtn.addEventListener('click', () => {
-            if (detailPanel) detailPanel.classList.remove('mobile-open');
-        });
+    // ========== NAVBAR SCROLL EFFECT ==========
+    const navbar = document.querySelector('.navbar');
+    let lastScroll = 0;
+
+    if (navbar) {
+        window.addEventListener('scroll', () => {
+            const current = window.scrollY;
+            if (current > 100) {
+                navbar.style.borderBottomColor = 'var(--border-light)';
+            } else {
+                navbar.style.borderBottomColor = 'var(--border)';
+            }
+            lastScroll = current;
+        }, { passive: true });
     }
+
+    // ========== SCROLL REVEAL ==========
+    const revealElements = document.querySelectorAll('.reveal');
+
+    if (revealElements.length > 0) {
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+    }
+
+    // ========== SMOOTH SCROLL FOR ANCHOR LINKS ==========
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', (e) => {
+            const target = document.querySelector(anchor.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
 
     // ========== FAQ ACCORDION ==========
     const faqItems = document.querySelectorAll('.faq-item');
@@ -186,10 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
             question.addEventListener('click', () => {
                 const isOpen = item.classList.contains('open');
 
-                // Fermer tous les autres
-                faqItems.forEach(other => other.classList.remove('open'));
+                // Close all
+                faqItems.forEach(i => i.classList.remove('open'));
 
-                // Toggle celui-ci
+                // Open clicked if it was closed
                 if (!isOpen) {
                     item.classList.add('open');
                 }
@@ -197,116 +116,217 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ========== SMOOTH SCROLL ==========
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = document.querySelector(anchor.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
+    // ========== PRICING TOGGLE (monthly/yearly) ==========
+    const toggleSwitch = document.querySelector('.toggle-switch');
+    const monthlyLabel = document.querySelector('.toggle-monthly');
+    const yearlyLabel = document.querySelector('.toggle-yearly');
 
-    // ========== COUNTER ANIMATION (Pricing) ==========
-    function animateCounters() {
-        document.querySelectorAll('[data-count]').forEach(el => {
-            const target = parseInt(el.dataset.count);
-            const duration = 1500;
-            const step = target / (duration / 16);
-            let current = 0;
+    if (toggleSwitch) {
+        toggleSwitch.addEventListener('click', () => {
+            toggleSwitch.classList.toggle('active');
+            const isYearly = toggleSwitch.classList.contains('active');
 
-            function update() {
-                current += step;
-                if (current < target) {
-                    el.textContent = Math.floor(current);
-                    requestAnimationFrame(update);
-                } else {
-                    el.textContent = target;
-                }
-            }
-            update();
+            if (monthlyLabel) monthlyLabel.classList.toggle('active', !isYearly);
+            if (yearlyLabel) yearlyLabel.classList.toggle('active', isYearly);
+
+            // Update prices
+            document.querySelectorAll('[data-monthly][data-yearly]').forEach(el => {
+                el.textContent = isYearly ? el.dataset.yearly : el.dataset.monthly;
+            });
         });
     }
 
-    const pricingSection = document.querySelector('.pricing');
-    if (pricingSection) {
+    // ========== DEMO PAGE — EMAIL SELECTION ==========
+    const emailRows = document.querySelectorAll('.demo-email-row');
+    const detailSections = document.querySelectorAll('.demo-detail-view');
+    const detailEmpty = document.querySelector('.demo-detail-empty');
+
+    if (emailRows.length > 0) {
+        emailRows.forEach(row => {
+            row.addEventListener('click', () => {
+                const emailId = row.dataset.email;
+
+                // Active state on rows
+                emailRows.forEach(r => r.classList.remove('active'));
+                row.classList.add('active');
+
+                // Show correct detail
+                if (detailSections.length > 0) {
+                    detailSections.forEach(d => d.style.display = 'none');
+                    const target = document.querySelector(`.demo-detail-view[data-email="${emailId}"]`);
+                    if (target) {
+                        target.style.display = 'block';
+                        if (detailEmpty) detailEmpty.style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        // Auto-select first email
+        if (emailRows[0]) {
+            emailRows[0].click();
+        }
+    }
+
+    // ========== DEMO SIDEBAR NAVIGATION ==========
+    const sidebarItems = document.querySelectorAll('.demo-sidebar-item');
+
+    sidebarItems.forEach(item => {
+        item.addEventListener('click', () => {
+            sidebarItems.forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+        });
+    });
+
+    // ========== COUNTER ANIMATION (stats) ==========
+    const statValues = document.querySelectorAll('.stat-value[data-count]');
+
+    if (statValues.length > 0) {
         const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    animateCounters();
-                    counterObserver.unobserve(entry.target);
+                    const el = entry.target;
+                    const target = parseInt(el.dataset.count);
+                    const suffix = el.dataset.suffix || '';
+                    const prefix = el.dataset.prefix || '';
+                    const duration = 1500;
+                    const start = performance.now();
+
+                    function animate(now) {
+                        const elapsed = now - start;
+                        const progress = Math.min(elapsed / duration, 1);
+                        // Ease out cubic
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        const current = Math.round(eased * target);
+                        el.textContent = prefix + current.toLocaleString('fr-FR') + suffix;
+                        if (progress < 1) requestAnimationFrame(animate);
+                    }
+
+                    requestAnimationFrame(animate);
+                    counterObserver.unobserve(el);
                 }
             });
-        }, { threshold: 0.3 });
-        counterObserver.observe(pricingSection);
+        }, { threshold: 0.5 });
+
+        statValues.forEach(el => counterObserver.observe(el));
     }
 
-    // ========== AUTO SELECT FIRST EMAIL ON DESKTOP ==========
-    if (!isMobile() && emailItems.length > 0) {
-        setTimeout(() => selectEmail('1'), 600);
+    // ========== SCORE RING ANIMATION (bento) ==========
+    const scoreCircle = document.querySelector('.score-circle-fill');
+
+    if (scoreCircle) {
+        const scoreObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseFloat(scoreCircle.dataset.score) || 78;
+                    const circumference = 2 * Math.PI * 42;
+                    const offset = circumference - (target / 100) * circumference;
+                    scoreCircle.style.strokeDasharray = circumference;
+                    scoreCircle.style.strokeDashoffset = circumference;
+
+                    requestAnimationFrame(() => {
+                        scoreCircle.style.transition = 'stroke-dashoffset 1.2s ease-out';
+                        scoreCircle.style.strokeDashoffset = offset;
+                    });
+
+                    scoreObserver.unobserve(scoreCircle);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        scoreObserver.observe(scoreCircle);
     }
 
-    // ========== ACTIVE NAV LINK ON SCROLL ==========
-    const sections = document.querySelectorAll('section[id]');
-
-    window.addEventListener('scroll', () => {
-        const scrollY = window.pageYOffset + 120;
-
-        sections.forEach(section => {
-            const top = section.offsetTop;
-            const height = section.offsetHeight;
-            const id = section.getAttribute('id');
-            const link = document.querySelector(`.nav-links a[href="#${id}"]`);
-            const linkM = document.querySelector(`.mobile-nav a[href="#${id}"]`);
-
-            if (link) {
-                if (scrollY >= top && scrollY < top + height) {
-                    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-                    link.classList.add('active');
-                } 
-            }
-            if (linkM) {
-                if (scrollY >= top && scrollY < top + height) {
-                    document.querySelectorAll('.mobile-nav a').forEach(a => a.classList.remove('active'));
-                    linkM.classList.add('active');
+    // ========== TYPING EFFECT (AI reply in demo) ==========
+    function typeText(element, text, speed = 20) {
+        return new Promise(resolve => {
+            element.textContent = '';
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    resolve();
                 }
             }
-        });
-    }, { passive: true });
-
-    // ========== TILT EFFECT ON CARDS (desktop) ==========
-    if (window.matchMedia('(min-width: 1024px)').matches) {
-        document.querySelectorAll('.card, .plan, .testimonial').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / 25;
-                const rotateY = (centerX - x) / 25;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-            });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = '';
-            });
+            type();
         });
     }
 
-    // ========== KEYBOARD: ESC CLOSE MOBILE NAV ==========
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('open')) {
-            burger.classList.remove('active');
-            mobileNav.classList.remove('open');
-            document.body.style.overflow = '';
-        }
+    // Apply typing effect to AI replies when they become visible
+    const aiReplies = document.querySelectorAll('.demo-ai-reply[data-typed]');
+
+    if (aiReplies.length > 0) {
+        const typingObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const text = el.dataset.typed;
+                    if (text) {
+                        typeText(el, text, 15);
+                    }
+                    typingObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        aiReplies.forEach(el => typingObserver.observe(el));
+    }
+
+    // ========== BENTO HOVER TILT EFFECT ==========
+    const bentoCards = document.querySelectorAll('.bento-card');
+
+    bentoCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -3;
+            const rotateY = ((x - centerX) / centerX) * 3;
+            card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(600px) rotateX(0) rotateY(0) scale(1)';
+            card.style.transition = 'transform 0.4s ease';
+        });
+
+        card.addEventListener('mouseenter', () => {
+            card.style.transition = 'none';
+        });
     });
 
-    // ========== PAGE LOADED CLASS ==========
-    window.addEventListener('load', () => {
-        document.body.classList.add('loaded');
+    // ========== KEYBOARD NAVIGATION ==========
+    document.addEventListener('keydown', (e) => {
+        // Escape closes mobile menu
+        if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('active')) {
+            mobileBtn.classList.remove('active');
+            mobileNav.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Arrow keys for demo email navigation
+        if (emailRows.length > 0) {
+            const activeRow = document.querySelector('.demo-email-row.active');
+            if (!activeRow) return;
+
+            let nextRow;
+            if (e.key === 'ArrowDown') {
+                nextRow = activeRow.nextElementSibling;
+            } else if (e.key === 'ArrowUp') {
+                nextRow = activeRow.previousElementSibling;
+            }
+
+            if (nextRow && nextRow.classList.contains('demo-email-row')) {
+                e.preventDefault();
+                nextRow.click();
+                nextRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
     });
 
 });
