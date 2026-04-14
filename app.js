@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
 
     // ========== MOBILE MENU ==========
@@ -27,25 +26,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function setLang(lang) {
         currentLang.value = lang;
 
-        // Update all lang buttons
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.lang === lang);
         });
 
-        // Update all translatable elements
+        // FIX: innerHTML au lieu de textContent pour supporter <strong> etc.
         document.querySelectorAll('[data-fr][data-en]').forEach(el => {
-            el.textContent = el.dataset[lang];
+            el.innerHTML = el.dataset[lang];
         });
 
-        // Store preference
         localStorage.setItem('mailmood-lang', lang);
     }
 
-    // Init lang from localStorage
     const savedLang = localStorage.getItem('mailmood-lang') || 'fr';
     setLang(savedLang);
 
-    // Bind lang buttons
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.addEventListener('click', () => setLang(btn.dataset.lang));
     });
@@ -88,7 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========== SMOOTH SCROLL FOR ANCHOR LINKS ==========
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', (e) => {
-            const target = document.querySelector(anchor.getAttribute('href'));
+            const href = anchor.getAttribute('href');
+            if (href === '#') return;
+            const target = document.querySelector(href);
             if (target) {
                 e.preventDefault();
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -97,41 +94,65 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ========== FAQ ACCORDION ==========
-    const faqItems = document.querySelectorAll('.faq-item');
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.parentElement;
+            const isOpen = item.classList.contains('active') || item.classList.contains('open');
 
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        if (question) {
-            question.addEventListener('click', () => {
-                const isOpen = item.classList.contains('open');
-
-                // Close all
-                faqItems.forEach(i => i.classList.remove('open'));
-
-                // Open clicked if it was closed
-                if (!isOpen) {
-                    item.classList.add('open');
-                }
+            // Close all
+            document.querySelectorAll('.faq-item').forEach(i => {
+                i.classList.remove('active');
+                i.classList.remove('open');
             });
-        }
+
+            // Open clicked if was closed
+            if (!isOpen) {
+                item.classList.add('active');
+                item.classList.add('open');
+            }
+        });
     });
 
     // ========== PRICING TOGGLE (monthly/yearly) ==========
-    const toggleSwitch = document.querySelector('.toggle-switch');
-    const monthlyLabel = document.querySelector('.toggle-monthly');
-    const yearlyLabel = document.querySelector('.toggle-yearly');
+    const pricingToggle = document.querySelector('.pricing-toggle-switch');
+    const pricingLabels = document.querySelectorAll('.pricing-toggle-label');
 
-    if (toggleSwitch) {
-        toggleSwitch.addEventListener('click', () => {
-            toggleSwitch.classList.toggle('active');
-            const isYearly = toggleSwitch.classList.contains('active');
+    if (pricingToggle) {
+        let isYearly = false;
 
-            if (monthlyLabel) monthlyLabel.classList.toggle('active', !isYearly);
-            if (yearlyLabel) yearlyLabel.classList.toggle('active', isYearly);
+        function updatePricing() {
+            pricingToggle.classList.toggle('active', isYearly);
 
-            // Update prices
-            document.querySelectorAll('[data-monthly][data-yearly]').forEach(el => {
+            pricingLabels.forEach(label => {
+                label.classList.toggle('active',
+                    (isYearly && label.dataset.period === 'yearly') ||
+                    (!isYearly && label.dataset.period === 'monthly')
+                );
+            });
+
+            // Update price amounts
+            document.querySelectorAll('.pricing-amount[data-monthly]').forEach(el => {
                 el.textContent = isYearly ? el.dataset.yearly : el.dataset.monthly;
+            });
+
+            // Update billed text
+            document.querySelectorAll('.pricing-billed[data-monthly]').forEach(el => {
+                el.textContent = isYearly ? el.dataset.yearly : el.dataset.monthly;
+            });
+        }
+
+        pricingToggle.addEventListener('click', () => {
+            isYearly = !isYearly;
+            updatePricing();
+        });
+
+        pricingLabels.forEach(label => {
+            label.addEventListener('click', () => {
+                const wantYearly = label.dataset.period === 'yearly';
+                if (wantYearly !== isYearly) {
+                    isYearly = wantYearly;
+                    updatePricing();
+                }
             });
         });
     }
@@ -146,11 +167,9 @@ document.addEventListener('DOMContentLoaded', () => {
             row.addEventListener('click', () => {
                 const emailId = row.dataset.email;
 
-                // Active state on rows
                 emailRows.forEach(r => r.classList.remove('active'));
                 row.classList.add('active');
 
-                // Show correct detail
                 if (detailSections.length > 0) {
                     detailSections.forEach(d => d.style.display = 'none');
                     const target = document.querySelector(`.demo-detail-view[data-email="${emailId}"]`);
@@ -162,18 +181,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Auto-select first email
         if (emailRows[0]) {
             emailRows[0].click();
         }
     }
 
     // ========== DEMO SIDEBAR NAVIGATION ==========
-    const sidebarItems = document.querySelectorAll('.demo-sidebar-item');
-
-    sidebarItems.forEach(item => {
+    document.querySelectorAll('.demo-folder').forEach(item => {
         item.addEventListener('click', () => {
-            sidebarItems.forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.demo-folder').forEach(i => i.classList.remove('active'));
             item.classList.add('active');
         });
     });
@@ -195,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     function animate(now) {
                         const elapsed = now - start;
                         const progress = Math.min(elapsed / duration, 1);
-                        // Ease out cubic
                         const eased = 1 - Math.pow(1 - progress, 3);
                         const current = Math.round(eased * target);
                         el.textContent = prefix + current.toLocaleString('fr-FR') + suffix;
@@ -255,7 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Apply typing effect to AI replies when they become visible
     const aiReplies = document.querySelectorAll('.demo-ai-reply[data-typed]');
 
     if (aiReplies.length > 0) {
@@ -302,14 +316,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ========== KEYBOARD NAVIGATION ==========
     document.addEventListener('keydown', (e) => {
-        // Escape closes mobile menu
         if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('active')) {
             mobileBtn.classList.remove('active');
             mobileNav.classList.remove('active');
             document.body.style.overflow = '';
         }
 
-        // Arrow keys for demo email navigation
         if (emailRows.length > 0) {
             const activeRow = document.querySelector('.demo-email-row.active');
             if (!activeRow) return;
