@@ -65,24 +65,14 @@
             </span>
             <h1 class="reveal" data-fr="Un prix simple, sans surprise" data-en="Simple pricing, no surprises">Un prix simple, sans surprise</h1>
             <p class="pricing-hero-sub reveal" data-fr="Commencez gratuitement. Passez à Pro quand vous êtes prêt." data-en="Start free. Upgrade to Pro when you're ready.">Commencez gratuitement. Passez à Pro quand vous êtes prêt.</p>
-
-            <!-- Toggle annuel / mensuel -->
-            <div class="pricing-toggle reveal">
-                <span class="pricing-toggle-label active" data-period="monthly" data-fr="Mensuel" data-en="Monthly">Mensuel</span>
-                <button class="pricing-toggle-switch" aria-label="Toggle billing period">
-                    <span class="pricing-toggle-knob"></span>
-                </button>
-                <span class="pricing-toggle-label" data-period="yearly" data-fr="Annuel" data-en="Yearly">Annuel</span>
-                <span class="pricing-save" data-fr="-20%" data-en="-20%">-20%</span>
-            </div>
         </div>
     </section>
 
-    <!-- ========== PRICING CARDS ========== -->
+    <!-- ========== PRICING CARDS — 3 BOXES ========== -->
     <section class="pricing-cards">
-        <div class="pricing-grid reveal">
+        <div class="pricing-grid pricing-grid-3 reveal">
 
-            <!-- FREE -->
+            <!-- GRATUIT -->
             <div class="pricing-card">
                 <div class="pricing-card-header">
                     <span class="pricing-plan-name" data-fr="Gratuit" data-en="Free">Gratuit</span>
@@ -92,6 +82,7 @@
                     <span class="pricing-amount">0€</span>
                     <span class="pricing-period" data-fr="/mois" data-en="/mo">/mois</span>
                 </div>
+                <div class="pricing-billed" data-fr="Gratuit pour toujours" data-en="Free forever">Gratuit pour toujours</div>
                 <a href="#" class="pricing-cta pricing-cta-secondary" data-fr="Commencer gratuitement" data-en="Start for free">Commencer gratuitement</a>
                 <ul class="pricing-features">
                     <li class="pricing-feature">
@@ -122,22 +113,29 @@
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                         <span data-fr="Support prioritaire" data-en="Priority support">Support prioritaire</span>
                     </li>
+                    <li class="pricing-feature disabled">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        <span data-fr="Extension Outlook" data-en="Outlook extension">Extension Outlook</span>
+                    </li>
+                    <li class="pricing-feature disabled">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        <span data-fr="12 tons personnalisables" data-en="12 customizable tones">12 tons personnalisables</span>
+                    </li>
                 </ul>
             </div>
 
-            <!-- PRO — RECOMMANDÉ -->
-            <div class="pricing-card pricing-card-featured">
-                <div class="pricing-card-badge" data-fr="⭐ Le plus populaire" data-en="⭐ Most popular">⭐ Le plus populaire</div>
+            <!-- MENSUEL 3,99€ -->
+            <div class="pricing-card">
                 <div class="pricing-card-header">
-                    <span class="pricing-plan-name" data-fr="Pro" data-en="Pro">Pro</span>
-                    <p class="pricing-plan-desc" data-fr="Pour les équipes performantes" data-en="For high-performing teams">Pour les équipes performantes</p>
+                    <span class="pricing-plan-name" data-fr="Mensuel" data-en="Monthly">Mensuel</span>
+                    <p class="pricing-plan-desc" data-fr="Sans engagement, résiliable à tout moment" data-en="No commitment, cancel anytime">Sans engagement, résiliable à tout moment</p>
                 </div>
                 <div class="pricing-price">
-                    <span class="pricing-amount" data-monthly="29€" data-yearly="23€">29€</span>
+                    <span class="pricing-amount">3,99€</span>
                     <span class="pricing-period" data-fr="/mois" data-en="/mo">/mois</span>
                 </div>
-                <div class="pricing-billed" data-monthly-fr="Facturé mensuellement" data-monthly-en="Billed monthly" data-yearly-fr="Facturé 276€/an" data-yearly-en="Billed €276/year" data-fr="Facturé mensuellement" data-en="Billed monthly">Facturé mensuellement</div>
-                <a href="#" class="pricing-cta pricing-cta-primary" data-fr="Essai gratuit 14 jours" data-en="Free 14-day trial">Essai gratuit 14 jours</a>
+                <div class="pricing-billed" data-fr="Facturé chaque mois" data-en="Billed monthly">Facturé chaque mois</div>
+                <a href="#" class="pricing-cta pricing-cta-secondary" data-fr="Essai gratuit 14 jours" data-en="Free 14-day trial">Essai gratuit 14 jours</a>
                 <ul class="pricing-features">
                     <li class="pricing-feature">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -170,44 +168,52 @@
                 </ul>
             </div>
 
-            <!-- ENTERPRISE -->
-            <div class="pricing-card">
+            <!-- ANNUEL 43,89€ — RECOMMANDÉ -->
+            <div class="pricing-card pricing-card-featured">
+                <div class="pricing-card-badge" data-fr="🎉 1 mois offert" data-en="🎉 1 month free">🎉 1 mois offert</div>
                 <div class="pricing-card-header">
-                    <span class="pricing-plan-name" data-fr="Enterprise" data-en="Enterprise">Enterprise</span>
-                    <p class="pricing-plan-desc" data-fr="Pour les grandes organisations" data-en="For large organizations">Pour les grandes organisations</p>
+                    <span class="pricing-plan-name" data-fr="Annuel" data-en="Yearly">Annuel</span>
+                    <p class="pricing-plan-desc" data-fr="Le meilleur rapport qualité-prix" data-en="Best value for money">Le meilleur rapport qualité-prix</p>
                 </div>
                 <div class="pricing-price">
-                    <span class="pricing-amount" data-fr="Sur mesure" data-en="Custom">Sur mesure</span>
+                    <span class="pricing-amount-wrapper">
+                        <span class="pricing-amount-old">47,88€</span>
+                        <span class="pricing-amount">43,89€</span>
+                    </span>
+                    <span class="pricing-period" data-fr="/an" data-en="/yr">/an</span>
                 </div>
-                <a href="#" class="pricing-cta pricing-cta-secondary" data-fr="Contacter l'équipe" data-en="Contact sales">Contacter l'équipe</a>
+                <div class="pricing-billed pricing-billed-highlight">
+                    <span data-fr="Soit 3,66€/mois au lieu de 3,99€" data-en="That's €3.66/mo instead of €3.99">Soit 3,66€/mois au lieu de 3,99€</span>
+                </div>
+                <a href="#" class="pricing-cta pricing-cta-primary" data-fr="Essai gratuit 14 jours" data-en="Free 14-day trial">Essai gratuit 14 jours</a>
                 <ul class="pricing-features">
                     <li class="pricing-feature">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span data-fr="Tout le plan Pro inclus" data-en="Everything in Pro">Tout le plan Pro inclus</span>
+                        <span data-fr="Analyses illimitées" data-en="Unlimited analyses">Analyses illimitées</span>
                     </li>
                     <li class="pricing-feature">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span data-fr="API dédiée" data-en="Dedicated API">API dédiée</span>
+                        <span data-fr="Réponses IA illimitées" data-en="Unlimited AI replies">Réponses IA illimitées</span>
                     </li>
                     <li class="pricing-feature">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span data-fr="SSO & SAML" data-en="SSO & SAML">SSO & SAML</span>
+                        <span data-fr="Extension Chrome + Outlook" data-en="Chrome + Outlook extension">Extension Chrome + Outlook</span>
                     </li>
                     <li class="pricing-feature">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span data-fr="Modèle IA fine-tuné" data-en="Fine-tuned AI model">Modèle IA fine-tuné</span>
+                        <span data-fr="12 tons personnalisables" data-en="12 customizable tones">12 tons personnalisables</span>
                     </li>
                     <li class="pricing-feature">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span data-fr="Utilisateurs illimités" data-en="Unlimited users">Utilisateurs illimités</span>
+                        <span data-fr="Intégrations CRM (Salesforce, HubSpot)" data-en="CRM integrations (Salesforce, HubSpot)">Intégrations CRM (Salesforce, HubSpot)</span>
                     </li>
                     <li class="pricing-feature">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span data-fr="Account manager dédié" data-en="Dedicated account manager">Account manager dédié</span>
+                        <span data-fr="Dashboard analytics complet" data-en="Full analytics dashboard">Dashboard analytics complet</span>
                     </li>
                     <li class="pricing-feature">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span data-fr="SLA 99.99% garanti" data-en="99.99% SLA guaranteed">SLA 99.99% garanti</span>
+                        <span data-fr="Support prioritaire 24/7" data-en="24/7 priority support">Support prioritaire 24/7</span>
                     </li>
                 </ul>
             </div>
