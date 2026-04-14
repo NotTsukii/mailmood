@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MailMood — Tarifs</title>
+    <meta name="description" content="Des tarifs simples et transparents. Commencez gratuitement, évoluez selon vos besoins.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📧</text></svg>">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="8" fill="#786BFF"/>
+                        <path d="M8 12L16 8L24 12V20L16 24L8 20V12Z" stroke="#fff" stroke-width="2" fill="none"/>
+                        <circle cx="16" cy="16" r="3" fill="#fff"/>
+                    </svg>
+                </div>
+                <span>MailMood</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" data-fr="Produit" data-en="Product">Produit</a>
+                <a href="demo.html" data-fr="Démo" data-en="Demo">Démo</a>
+                <a href="pricing.html" class="active" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="nav-lang">
+                <button class="lang-btn active" data-lang="fr">FR</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+            <a href="#" class="btn-nav" data-fr="Se connecter" data-en="Log in">Se connecter</a>
+            <button class="mobile-menu-btn" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ========== MOBILE NAV ========== -->
+    <div class="mobile-nav">
+        <a href="index.html" data-fr="Produit" data-en="Product">Produit</a>
+        <a href="demo.html" data-fr="Démo" data-en="Demo">Démo</a>
+        <a href="pricing.html" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
+        <div class="mobile-nav-lang">
+            <button class="lang-btn active" data-lang="fr">FR</button>
+            <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+        <a href="#" class="btn-nav" data-fr="Se connecter" data-en="Log in">Se connecter</a>
+    </div>
+
+    <!-- ========== PRICING HERO ========== -->
+    <section class="pricing-hero">
+        <div class="pricing-hero-content">
+            <span class="badge reveal">
+                <span class="badge-dot"></span>
+                <span data-fr="Tarifs transparents" data-en="Transparent pricing">Tarifs transparents</span>
+            </span>
+            <h1 class="reveal" data-fr="Un prix simple, sans surprise" data-en="Simple pricing, no surprises">Un prix simple, sans surprise</h1>
+            <p class="pricing-hero-sub reveal" data-fr="Commencez gratuitement. Passez à Pro quand vous êtes prêt." data-en="Start free. Upgrade to Pro when you're ready.">Commencez gratuitement. Passez à Pro quand vous êtes prêt.</p>
+
+            <!-- Toggle annuel / mensuel -->
+            <div class="pricing-toggle reveal">
+                <span class="pricing-toggle-label active" data-period="monthly" data-fr="Mensuel" data-en="Monthly">Mensuel</span>
+                <button class="pricing-toggle-switch" aria-label="Toggle billing period">
+                    <span class="pricing-toggle-knob"></span>
+                </button>
+                <span class="pricing-toggle-label" data-period="yearly" data-fr="Annuel" data-en="Yearly">Annuel</span>
+                <span class="pricing-save" data-fr="-20%" data-en="-20%">-20%</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PRICING CARDS ========== -->
+    <section class="pricing-cards">
+        <div class="pricing-grid reveal">
+
+            <!-- FREE -->
+            <div class="pricing-card">
+                <div class="pricing-card-header">
+                    <span class="pricing-plan-name" data-fr="Gratuit" data-en="Free">Gratuit</span>
+                    <p class="pricing-plan-desc" data-fr="Pour découvrir MailMood" data-en="To discover MailMood">Pour découvrir MailMood</p>
+                </div>
+                <div class="pricing-price">
+                    <span class="pricing-amount">0€</span>
+                    <span class="pricing-period" data-fr="/mois" data-en="/mo">/mois</span>
+                </div>
+                <a href="#" class="pricing-cta pricing-cta-secondary" data-fr="Commencer gratuitement" data-en="Start for free">Commencer gratuitement</a>
+                <ul class="pricing-features">
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="50 analyses / mois" data-en="50 analyses / month">50 analyses / mois</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="10 réponses IA / mois" data-en="10 AI replies / month">10 réponses IA / mois</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="Extension Chrome" data-en="Chrome extension">Extension Chrome</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="3 tons de réponse" data-en="3 reply tones">3 tons de réponse</span>
+                    </li>
+                    <li class="pricing-feature disabled">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        <span data-fr="Intégrations CRM" data-en="CRM integrations">Intégrations CRM</span>
+                    </li>
+                    <li class="pricing-feature disabled">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        <span data-fr="Dashboard analytics" data-en="Analytics dashboard">Dashboard analytics</span>
+                    </li>
+                    <li class="pricing-feature disabled">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        <span data-fr="Support prioritaire" data-en="Priority support">Support prioritaire</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- PRO — RECOMMANDÉ -->
+            <div class="pricing-card pricing-card-featured">
+                <div class="pricing-card-badge" data-fr="⭐ Le plus populaire" data-en="⭐ Most popular">⭐ Le plus populaire</div>
+                <div class="pricing-card-header">
+                    <span class="pricing-plan-name" data-fr="Pro" data-en="Pro">Pro</span>
+                    <p class="pricing-plan-desc" data-fr="Pour les équipes performantes" data-en="For high-performing teams">Pour les équipes performantes</p>
+                </div>
+                <div class="pricing-price">
+                    <span class="pricing-amount" data-monthly="29€" data-yearly="23€">29€</span>
+                    <span class="pricing-period" data-fr="/mois" data-en="/mo">/mois</span>
+                </div>
+                <div class="pricing-billed" data-monthly-fr="Facturé mensuellement" data-monthly-en="Billed monthly" data-yearly-fr="Facturé 276€/an" data-yearly-en="Billed €276/year" data-fr="Facturé mensuellement" data-en="Billed monthly">Facturé mensuellement</div>
+                <a href="#" class="pricing-cta pricing-cta-primary" data-fr="Essai gratuit 14 jours" data-en="Free 14-day trial">Essai gratuit 14 jours</a>
+                <ul class="pricing-features">
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="Analyses illimitées" data-en="Unlimited analyses">Analyses illimitées</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="Réponses IA illimitées" data-en="Unlimited AI replies">Réponses IA illimitées</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="Extension Chrome + Outlook" data-en="Chrome + Outlook extension">Extension Chrome + Outlook</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="12 tons personnalisables" data-en="12 customizable tones">12 tons personnalisables</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="Intégrations CRM (Salesforce, HubSpot)" data-en="CRM integrations (Salesforce, HubSpot)">Intégrations CRM (Salesforce, HubSpot)</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="Dashboard analytics complet" data-en="Full analytics dashboard">Dashboard analytics complet</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="Support prioritaire 24/7" data-en="24/7 priority support">Support prioritaire 24/7</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- ENTERPRISE -->
+            <div class="pricing-card">
+                <div class="pricing-card-header">
+                    <span class="pricing-plan-name" data-fr="Enterprise" data-en="Enterprise">Enterprise</span>
+                    <p class="pricing-plan-desc" data-fr="Pour les grandes organisations" data-en="For large organizations">Pour les grandes organisations</p>
+                </div>
+                <div class="pricing-price">
+                    <span class="pricing-amount" data-fr="Sur mesure" data-en="Custom">Sur mesure</span>
+                </div>
+                <a href="#" class="pricing-cta pricing-cta-secondary" data-fr="Contacter l'équipe" data-en="Contact sales">Contacter l'équipe</a>
+                <ul class="pricing-features">
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="Tout le plan Pro inclus" data-en="Everything in Pro">Tout le plan Pro inclus</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="API dédiée" data-en="Dedicated API">API dédiée</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="SSO & SAML" data-en="SSO & SAML">SSO & SAML</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="Modèle IA fine-tuné" data-en="Fine-tuned AI model">Modèle IA fine-tuné</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="Utilisateurs illimités" data-en="Unlimited users">Utilisateurs illimités</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="Account manager dédié" data-en="Dedicated account manager">Account manager dédié</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span data-fr="SLA 99.99% garanti" data-en="99.99% SLA guaranteed">SLA 99.99% garanti</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========== FAQ ========== -->
+    <section class="faq">
+        <div class="faq-header reveal">
+            <h2 data-fr="Questions fréquentes" data-en="Frequently asked questions">Questions fréquentes</h2>
+            <p data-fr="Tout ce que vous devez savoir avant de commencer." data-en="Everything you need to know before getting started.">Tout ce que vous devez savoir avant de commencer.</p>
+        </div>
+
+        <div class="faq-list reveal">
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span data-fr="Puis-je changer de plan à tout moment ?" data-en="Can I switch plans at any time?">Puis-je changer de plan à tout moment ?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p data-fr="Oui, absolument. Vous pouvez passer de Gratuit à Pro ou Enterprise à tout moment. Le changement est immédiat et la facturation est calculée au prorata." data-en="Yes, absolutely. You can upgrade from Free to Pro or Enterprise at any time. The change is immediate and billing is prorated.">Oui, absolument. Vous pouvez passer de Gratuit à Pro ou Enterprise à tout moment. Le changement est immédiat et la facturation est calculée au prorata.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span data-fr="L'essai gratuit nécessite-t-il une carte bancaire ?" data-en="Does the free trial require a credit card?">L'essai gratuit nécessite-t-il une carte bancaire ?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p data-fr="Non. L'essai de 14 jours est 100% gratuit, sans carte bancaire. Vous ne serez jamais facturé automatiquement." data-en="No. The 14-day trial is 100% free, no credit card required. You will never be charged automatically.">Non. L'essai de 14 jours est 100% gratuit, sans carte bancaire. Vous ne serez jamais facturé automatiquement.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span data-fr="Mes données sont-elles sécurisées ?" data-en="Is my data secure?">Mes données sont-elles sécurisées ?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p data-fr="Absolument. Vos emails ne sont jamais stockés. L'analyse se fait en temps réel et les données sont chiffrées de bout en bout (AES-256). Nous sommes conformes RGPD et SOC 2 Type II." data-en="Absolutely. Your emails are never stored. Analysis is done in real-time and data is end-to-end encrypted (AES-256). We are GDPR and SOC 2 Type II compliant.">Absolument. Vos emails ne sont jamais stockés. L'analyse se fait en temps réel et les données sont chiffrées de bout en bout (AES-256). Nous sommes conformes RGPD et SOC 2 Type II.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span data-fr="Quelles intégrations sont disponibles ?" data-en="What integrations are available?">Quelles intégrations sont disponibles ?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p data-fr="Gmail, Outlook, Salesforce, HubSpot, Zendesk, Intercom, Slack et Zapier. D'autres intégrations arrivent chaque mois." data-en="Gmail, Outlook, Salesforce, HubSpot, Zendesk, Intercom, Slack and Zapier. More integrations are added every month.">Gmail, Outlook, Salesforce, HubSpot, Zendesk, Intercom, Slack et Zapier. D'autres intégrations arrivent chaque mois.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span data-fr="Que se passe-t-il si je dépasse mon quota gratuit ?" data-en="What happens if I exceed my free quota?">Que se passe-t-il si je dépasse mon quota gratuit ?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p data-fr="Vous recevrez une notification amicale. L'analyse continuera de fonctionner en mode lecture seule (sans réponse IA) jusqu'au renouvellement du mois. Aucune coupure brutale." data-en="You'll receive a friendly notification. Analysis will continue in read-only mode (without AI replies) until the monthly renewal. No abrupt cutoff.">Vous recevrez une notification amicale. L'analyse continuera de fonctionner en mode lecture seule (sans réponse IA) jusqu'au renouvellement du mois. Aucune coupure brutale.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span data-fr="Puis-je annuler à tout moment ?" data-en="Can I cancel at any time?">Puis-je annuler à tout moment ?</span>
+                    <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p data-fr="Oui. Un clic suffit dans les paramètres. Pas de frais cachés, pas de période d'engagement, pas de mauvaise surprise. On déteste ça autant que vous." data-en="Yes. One click in settings. No hidden fees, no lock-in period, no bad surprises. We hate that as much as you do.">Oui. Un clic suffit dans les paramètres. Pas de frais cachés, pas de période d'engagement, pas de mauvaise surprise. On déteste ça autant que vous.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========== CTA SECTION ========== -->
+    <section class="cta-section">
+        <div class="cta-box reveal">
+            <h2 data-fr="Prêt à transformer vos emails ?" data-en="Ready to transform your emails?">Prêt à transformer vos emails ?</h2>
+            <p data-fr="Rejoignez 2 400+ professionnels qui répondent mieux, plus vite." data-en="Join 2,400+ professionals who reply better, faster.">Rejoignez 2 400+ professionnels qui répondent mieux, plus vite.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn-hero-primary" data-fr="Démarrer gratuitement" data-en="Start for free">Démarrer gratuitement</a>
+                <a href="demo.html" class="btn-hero-secondary" data-fr="Voir la démo →" data-en="See the demo →">Voir la démo →</a>
+            </div>
+            <div class="cta-trust">
+                <span data-fr="✓ Gratuit 14 jours" data-en="✓ Free 14 days">✓ Gratuit 14 jours</span>
+                <span data-fr="✓ Sans carte bancaire" data-en="✓ No credit card">✓ Sans carte bancaire</span>
+                <span data-fr="✓ Annulation en 1 clic" data-en="✓ Cancel in 1 click">✓ Annulation en 1 clic</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+                            <rect width="32" height="32" rx="8" fill="#786BFF"/>
+                            <path d="M8 12L16 8L24 12V20L16 24L8 20V12Z" stroke="#fff" stroke-width="2" fill="none"/>
+                            <circle cx="16" cy="16" r="3" fill="#fff"/>
+                        </svg>
+                    </div>
+                    <span>MailMood</span>
+                </a>
+                <p class="footer-desc" data-fr="L'IA qui comprend vos emails." data-en="AI that understands your emails.">L'IA qui comprend vos emails.</p>
+            </div>
+            <div class="footer-columns">
+                <div class="footer-col">
+                    <h4 data-fr="Produit" data-en="Product">Produit</h4>
+                    <a href="demo.html" data-fr="Démo" data-en="Demo">Démo</a>
+                    <a href="pricing.html" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
+                    <a href="#" data-fr="Intégrations" data-en="Integrations">Intégrations</a>
+                </div>
+                <div class="footer-col">
+                    <h4 data-fr="Ressources" data-en="Resources">Ressources</h4>
+                    <a href="#" data-fr="Documentation" data-en="Documentation">Documentation</a>
+                    <a href="#" data-fr="Blog" data-en="Blog">Blog</a>
+                    <a href="#" data-fr="Changelog" data-en="Changelog">Changelog</a>
+                </div>
+                <div class="footer-col">
+                    <h4 data-fr="Légal" data-en="Legal">Légal</h4>
+                    <a href="#" data-fr="Confidentialité" data-en="Privacy">Confidentialité</a>
+                    <a href="#" data-fr="CGU" data-en="Terms">CGU</a>
+                    <a href="#" data-fr="RGPD" data-en="GDPR">RGPD</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2025 MailMood. Tous droits réservés.</span>
+            <div class="footer-socials">
+                <a href="#" aria-label="Twitter">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="#" aria-label="LinkedIn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <a href="#" aria-label="GitHub">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
